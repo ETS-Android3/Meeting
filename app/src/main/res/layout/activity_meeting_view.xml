@@ -1,0 +1,164 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.MeetingView">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType=""
+                    android:layout_gravity="center_vertical"
+                    android:ems="10"
+                    android:id="@+id/textName"
+                    android:textSize="15pt"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="Name"
+                    android:textAlignment="center"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@mipmap/meeting_date"
+                    android:padding="5dp"
+                    android:id="@+id/imageDate" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12pt"
+                    android:id="@+id/textDate" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@mipmap/meeting_clock"
+                    android:padding="5dp"
+                    android:id="@+id/imageTime" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="time"
+                    android:layout_gravity="center_vertical"
+                    android:ems="10"
+                    android:textSize="12pt"
+                    android:id="@+id/textTime" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/imageAttendees"
+                android:src="@mipmap/meeting_attendee_foreground"
+                android:background="@color/meeting_attendee_background"
+                android:layout_margin="5dp"/>
+
+            <com.example.jordan.meeting.components.ExpandableHeightListView
+                android:id="@+id/attendeeList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00000000"
+                android:fadingEdge="none"
+                android:focusable="false"
+                android:scrollbars="none"
+                android:paddingBottom="10dp"
+                android:paddingHorizontal="5dp">
+            </com.example.jordan.meeting.components.ExpandableHeightListView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageLocation"
+                    android:src="@mipmap/meeting_location"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPostalAddress"
+                    android:ems="10"
+                    android:id="@+id/textLocation"
+                    android:clickable="true"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12pt"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@mipmap/meeting_note"
+                    android:padding="5dp"
+                    android:id="@+id/imageNotes" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textAutoCorrect"
+                    android:ems="10"
+                    android:id="@+id/textNotes"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12pt"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
