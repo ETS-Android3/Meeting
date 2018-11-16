@@ -63,7 +63,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
                     android:layout_gravity="center_vertical"
                     android:textSize="12pt"
                     android:id="@+id/textDate" />
@@ -84,7 +83,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="time"
                     android:layout_gravity="center_vertical"
                     android:ems="10"
                     android:textSize="12pt"
@@ -108,9 +106,7 @@
                 android:fadingEdge="none"
                 android:focusable="false"
                 android:scrollbars="none"
-                android:paddingBottom="10dp"
-                android:paddingHorizontal="5dp">
-            </com.example.jordan.meeting.components.ExpandableHeightListView>
+                android:paddingBottom="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -126,7 +122,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
                     android:ems="10"
                     android:id="@+id/textLocation"
                     android:clickable="true"
@@ -150,7 +145,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textAutoCorrect"
                     android:ems="10"
                     android:id="@+id/textNotes"
                     android:layout_gravity="center_vertical"

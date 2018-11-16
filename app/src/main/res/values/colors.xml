@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#054880</color>
     <color name="colorAccent">#bf000a</color>
 
+    <!-- Font colors -->
     <color name="colorBlack">#000000</color>
     <color name="colorBlue">#2270af</color>
     <color name="colorGrey">#808183</color>

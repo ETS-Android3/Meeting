@@ -90,4 +90,8 @@
     <string name="hint_note">Note</string>
     <string name="hint_new_attendee">New attendee</string>
     <string name="meeting_name_field">Meeting name</string>
+    <string name="menu_settings_title">Settings</string>
+    <string name="menu_save_title">Save</string>
+    <string name="menu_delete_title">Delete</string>
+    <string name="menu_edit_title">Edit</string>
 </resources>
