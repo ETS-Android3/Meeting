@@ -5,6 +5,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class Maps extends FragmentActivity implements OnMapReadyCallback {
+public class Maps extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private int _Meeting_Id;
@@ -52,6 +54,14 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         Intent intent = getIntent();
         _Meeting_Id = intent.getIntExtra("meeting_Id", 0);
         meeting = meetingRepo.getMeetingById(_Meeting_Id);
+
+        /* Setting actionBar */
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            /* Show the Up button in the action bar */
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(meeting.name);
+        }
     }
 
 
@@ -84,10 +94,19 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
             /* Add a marker on the meeting place, move the camera and zoom */
             mMap.addMarker(new MarkerOptions().position(meetingPoint).title(meetingAddress.getAddressLine(0)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, 10.0f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, 14.0f));
         } else {
             Log.d(tag, "Address not found");
             Toast.makeText(this, R.string.prompt_address_not_found, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void finish(){
+        Log.d(tag, "Maps finish");
+        Intent data = new Intent();
+        data.putExtra("meeting_Id", meeting.meeting_ID);
+        setResult(RESULT_OK, data);
+        super.finish();
     }
 }

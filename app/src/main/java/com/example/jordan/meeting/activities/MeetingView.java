@@ -143,6 +143,11 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
             }
         }
 
+        if (requestCode == 40)
+
+            /* Resetting clickable text field feedback */
+            textLocation.setTextColor(0);
+
         /* Refreshing meeting view */
         refresh();
     }
@@ -221,6 +226,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
         textLocation.setText(meeting.location);
         textLocation.setTextSize(TypedValue.COMPLEX_UNIT_PT,fontSize);
         textLocation.setTextColor(fontColor);
+        textLocation.getPaint().setUnderlineText(true);
         textNotes.setTextSize(TypedValue.COMPLEX_UNIT_PT,fontSize);
         textNotes.setTextColor(fontColor);
         textNotes.setText(meeting.notes);
@@ -239,6 +245,10 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
         Log.d(tag, "MeetingView onClick");
         switch (v.getId()) {
             case R.id.textLocation:
+
+                /* Triggering feedback */
+                textLocation.setTextColor(getColor(R.color.colorAccent));
+
                 Intent indent = new Intent(getApplicationContext(), Maps.class);
                 indent.putExtra("meeting_Id", _Meeting_Id);
                 startActivityForResult(indent, 40);

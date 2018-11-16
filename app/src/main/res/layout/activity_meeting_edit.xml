@@ -90,6 +90,7 @@
                 android:layout_margin="5dp"/>
 
             <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -116,8 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spnAttendee"
-                android:padding="5dp">
-            </Spinner>
+                android:padding="5dp" />
 
             <com.example.jordan.meeting.components.ExpandableHeightListView
                 android:layout_width="match_parent"

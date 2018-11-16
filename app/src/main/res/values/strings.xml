@@ -82,4 +82,12 @@
     <string name="prompt_existing_attendee">Existing attendee</string>
     <string name="return_key_update">Meeting Record updated</string>
     <string name="prompt_address_not_found">Address not found, sorry !</string>
+    <string name="actionbar_title_settings">Settings</string>
+    <string name="hint_meeting_name">Meeting Name</string>
+    <string name="hint_date">Date</string>
+    <string name="hint_time">Time</string>
+    <string name="hint_location">Location</string>
+    <string name="hint_note">Note</string>
+    <string name="hint_new_attendee">New attendee</string>
+    <string name="meeting_name_field">Meeting name</string>
 </resources>

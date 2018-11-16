@@ -100,10 +100,16 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
 
         /* Setting meeting info */
         editTextName.setText(meeting.name);
+        editTextName.setHint(getString(R.string.hint_meeting_name));
         editTextDate.setText(meeting.date);
+        editTextDate.setHint(R.string.hint_date);
         editTextTime.setText(meeting.time);
+        editTextTime.setHint(R.string.hint_time);
         editTextLocation.setText(meeting.location);
+        editTextLocation.setHint(R.string.hint_location);
         editTextNotes.setText(meeting.notes);
+        editTextNotes.setHint(R.string.hint_note);
+        editTextAttendee.setHint(R.string.hint_new_attendee);
 
         /* Setting  list of all meetings attendee */
         ArrayList<HashMap<String, String>> allAttendeeList = attendeeRepo.getAttendeeList();
@@ -120,10 +126,13 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(tag, "Spinner position=" + position + " id=" + id);
                 if (position != 0) {
+
                     /* Adding attendee to the meeting */
                     TextView tv = view.findViewById(R.id.attendee_Id);
                     int attendeeId = Integer.valueOf(tv.getText().toString());
                     addAttendee(attendeeId);
+
+                    /* Printing hint */
                     spnAttendees.setSelection(0);
                 }
             }
@@ -248,6 +257,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
 
                 /* Add the new attendee to this meeting */
                 addAttendee(attendeeID);
+                editTextAttendee.setText("");
                 break;
         }
     }

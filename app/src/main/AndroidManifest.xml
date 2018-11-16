@@ -33,7 +33,8 @@
                 android:value=".activities.Main" />
         </activity>
         <activity android:name=".activities.MeetingView"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.Main" />
@@ -57,7 +58,11 @@
 
         <activity
             android:name=".activities.Maps"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activities.MeetingView" />
+        </activity>
     </application>
 
 </manifest>
