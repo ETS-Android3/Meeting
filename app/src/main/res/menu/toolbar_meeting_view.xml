@@ -13,4 +13,9 @@
         android:icon="@drawable/ic_settings"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_google_calendar"
+        android:title="@string/menu_google_calendar_title"
+        android:icon="@drawable/ic_sync_black_24dp"
+        app:showAsAction="never"/>
+
 </menu>

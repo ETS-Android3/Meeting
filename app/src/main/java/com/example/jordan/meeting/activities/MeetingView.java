@@ -19,8 +19,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jordan.meeting.components.ExpandableHeightListView;
 import com.example.jordan.meeting.R;
+import com.example.jordan.meeting.components.ExpandableHeightListView;
 import com.example.jordan.meeting.database.Meeting;
 import com.example.jordan.meeting.repositories.AttendToRepo;
 import com.example.jordan.meeting.repositories.AttendeeRepo;
@@ -53,8 +53,10 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
     private float fontSize;
     private int fontColor;
 
+    GoogleCalendarTask googleCalendarTask;
+
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(tag, "MeetingView onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_view);
@@ -97,6 +99,9 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
 
         /* Setting fields */
         refresh();
+
+        /* Initializing connection to Google Calendar */
+        googleCalendarTask = new GoogleCalendarTask(meeting, this);
     }
 
     @Override
@@ -122,6 +127,10 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
                 startActivityForResult(indent, 30);
                 return true;
 
+            case R.id.action_google_calendar:
+                Log.d(tag, "Action sync calendar");
+                googleCalendarTask.execute();
+
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -131,22 +140,32 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         Log.d(tag, "MeetingView onActivityResult");
-        if (resultCode == RESULT_OK && requestCode == 30){
-            if (data.hasExtra("returnKey")) {
-                String returnKey = Objects.requireNonNull(data.getExtras()).getString("returnKey");
-                Toast.makeText(this, returnKey, Toast.LENGTH_SHORT).show();
+        if (resultCode == RESULT_OK){
+            switch (requestCode){
 
-                /* Finishing if the meeting has been deleted */
-                if (Objects.requireNonNull(returnKey).equals(getString(R.string.return_key_delete))) {
-                        finish();
-                }
+                case 30:
+                    if (data.hasExtra("returnKey")) {
+                        String returnKey = Objects.requireNonNull(data.getExtras()).getString("returnKey");
+                        Toast.makeText(this, returnKey, Toast.LENGTH_SHORT).show();
+
+                        /* Finishing if the meeting has been deleted */
+                        if (Objects.requireNonNull(returnKey).equals(getString(R.string.return_key_delete))) {
+                            finish();
+                        }
+                    }
+
+                case 40:
+
+                    /* Resetting clickable text field feedback */
+                    textLocation.setTextColor(0);
+
+                case 60:
+
+                    /* Getting Google account name */
+                    googleCalendarTask.getAccountName(data);
             }
+
         }
-
-        if (requestCode == 40)
-
-            /* Resetting clickable text field feedback */
-            textLocation.setTextColor(0);
 
         /* Refreshing meeting view */
         refresh();

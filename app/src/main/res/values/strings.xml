@@ -94,4 +94,6 @@
     <string name="menu_save_title">Save</string>
     <string name="menu_delete_title">Delete</string>
     <string name="menu_edit_title">Edit</string>
+    <string name="google_calendar_description">Added by means of Meeting application</string>
+    <string name="menu_google_calendar_title">Sync with Google Calendar</string>
 </resources>
