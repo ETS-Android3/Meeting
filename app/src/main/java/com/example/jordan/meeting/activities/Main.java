@@ -32,6 +32,10 @@ import static com.example.jordan.meeting.R.layout.meeting_entry;
 
 public class Main extends AppCompatActivity implements android.view.View.OnClickListener {
 
+    private static final int MEETING_VIEW_REQUEST_CODE = 1;
+    private static final int SETTINGS_REQUEST_CODE = 2;
+    private static final int MEETING_EDIT_REQUEST_CODE = 3;
+
     TextView meeting_Id;
     FloatingActionButton btnNewMeeting;
 
@@ -70,7 +74,7 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
                 String meetingId = meeting_Id.getText().toString();
                 Intent indent = new Intent(getApplicationContext(), MeetingView.class);
                 indent.putExtra("meeting_Id", Integer.parseInt(meetingId));
-                startActivityForResult(indent, 10);
+                startActivityForResult(indent, MEETING_VIEW_REQUEST_CODE);
             }
         });
 
@@ -94,7 +98,7 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
             case R.id.action_settings:
                 Log.d(tag, "Action settings");
                 Intent intent = new Intent(this, Settings.class);
-                startActivityForResult(intent, 50);
+                startActivityForResult(intent, SETTINGS_REQUEST_CODE);
                 return true;
 
             default:
@@ -109,31 +113,29 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
         if (view == findViewById(R.id.btnNewMeeting)) {
             Intent intent = new Intent(this, MeetingEdit.class);
             intent.putExtra("meeting", 0);
-            startActivityForResult(intent, 10);
+            startActivityForResult(intent, MEETING_EDIT_REQUEST_CODE);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         Log.d(tag, "Main onActivityResult");
-        if (resultCode == RESULT_OK)
-            switch (requestCode){
-                case 10:
-                    if (data.hasExtra("returnKey"))
-                        Toast.makeText(this,
-                                Objects.requireNonNull(data.getExtras()).getString("returnKey"),
-                                Toast.LENGTH_SHORT).show();
+        if (resultCode == RESULT_OK) {
 
-                    /* Refreshing meeting list */
-                    ArrayList<HashMap<String, String>> meetingList = repo.getMeetingList();
-                    ListAdapter adapter = new SimpleAdapter(Main.this, meetingList, meeting_entry,
-                            new String[]{"id", "name", "date"},
-                            new int[]{R.id.meeting_Id, R.id.meeting_name, R.id.meeting_date});
-                    meetingListView.setAdapter(adapter);
+            if (data.hasExtra("returnKey"))
+                Toast.makeText(this,
+                        Objects.requireNonNull(data.getExtras()).getString("returnKey"),
+                        Toast.LENGTH_SHORT).show();
 
-                case 50:
-                    Log.d(tag, "Outing of settings");
-                    updateFontStyle();
+            /* Refreshing meeting list */
+            ArrayList<HashMap<String, String>> meetingList = repo.getMeetingList();
+            ListAdapter adapter = new SimpleAdapter(Main.this, meetingList, meeting_entry,
+                    new String[]{"id", "name", "date"},
+                    new int[]{R.id.meeting_Id, R.id.meeting_name, R.id.meeting_date});
+            meetingListView.setAdapter(adapter);
+
+            /* Updating font style */
+            updateFontStyle();
         }
     }
 
@@ -143,11 +145,7 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
         String prefFontSize = sharedPref.getString("fontSize", "-1");
         final String prefFontColor = sharedPref.getString("fontColor", "-1");
         Log.d(tag, "updateFontStyle size: " + prefFontSize + " color " + prefFontColor);
-
-        if (!prefFontSize.equals("-1"))
-            fontSize = Float.valueOf(prefFontSize);
-        else
-            Log.d(tag, "Error while reading font size preference");
+        fontSize = Float.valueOf(prefFontSize);
 
         switch (Integer.valueOf(prefFontColor)){
             case 1:

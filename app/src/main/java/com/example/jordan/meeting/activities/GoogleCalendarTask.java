@@ -1,7 +1,6 @@
 package com.example.jordan.meeting.activities;
 
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,17 +31,17 @@ import java.util.Objects;
 
 public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
     private GoogleAccountCredential credential;
-    private final String PREF_ACCOUNT_NAME = "accountName";
     private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     private final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     private String tag = "events";
     private Meeting meeting;
-    private Activity activity;
+    private MeetingView meetingView;
 
-    GoogleCalendarTask(final Meeting meeting, final Activity activity){
+    GoogleCalendarTask(final Meeting meeting, final MeetingView meetingView){
         this.meeting = meeting;
-        this.activity = activity;
+        this.meetingView = meetingView;
     }
 
     void getAccountName(Intent data) {
@@ -52,9 +51,9 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
                 Objects.requireNonNull(data.getExtras()).getString(AccountManager.KEY_ACCOUNT_NAME);
         if (accountName != null) {
             credential.setSelectedAccountName(accountName);
-            SharedPreferences settings = activity.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences settings = meetingView.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(PREF_ACCOUNT_NAME, accountName);
+            editor.putString("accountName", accountName);
             editor.apply();
         }
     }
@@ -65,28 +64,29 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
 
         /* Google Accounts */
         credential =
-                GoogleAccountCredential.usingOAuth2(activity, Collections.singleton(CalendarScopes.CALENDAR));
-        SharedPreferences settings = activity.getPreferences(Context.MODE_PRIVATE);
-        credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+                GoogleAccountCredential.usingOAuth2(meetingView, Collections.singleton(CalendarScopes.CALENDAR));
+        SharedPreferences settings = meetingView.getPreferences(Context.MODE_PRIVATE);
+        credential.setSelectedAccountName(settings.getString("accountName", null));
 
         /* Calendar client */
         com.google.api.services.calendar.Calendar client = new com.google.api.services.calendar.Calendar.Builder(
-                transport, jsonFactory, credential).setApplicationName(activity.getString(R.string.app_name))
+                transport, jsonFactory, credential).setApplicationName(meetingView.getString(R.string.app_name))
                 .build();
 
         /* Asking user for choosing Google account */
         if (credential.getSelectedAccountName() == null) {
-            activity.startActivityForResult(credential.newChooseAccountIntent(), 60);
+            meetingView.startActivityForResult(credential.newChooseAccountIntent(), MeetingView.ACCOUNT_REQUEST_CODE);
+            return null;
         }
 
         /* Asking user for permission if needed */
         try {
-            token = GoogleAuthUtil.getToken(activity.getApplicationContext(), credential.getSelectedAccount(), credential.getScope());
+            token = GoogleAuthUtil.getToken(meetingView.getApplicationContext(), credential.getSelectedAccount(), credential.getScope());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (UserRecoverableAuthException e) {
             Log.d(tag, "Need permission");
-            activity.startActivityForResult(e.getIntent(),60);
+            meetingView.startActivityForResult(e.getIntent(),PERMISSION_REQUEST_CODE);
         } catch (GoogleAuthException e) {
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
         Event event = new Event()
                 .setSummary(meeting.name)
                 .setLocation(meeting.location)
-                .setDescription(activity.getString(R.string.google_calendar_description));
+                .setDescription(meetingView.getString(R.string.google_calendar_description));
 
         DateTime startDateTime = new DateTime("2018-05-28T09:00:00-07:00");
         EventDateTime start = new EventDateTime()

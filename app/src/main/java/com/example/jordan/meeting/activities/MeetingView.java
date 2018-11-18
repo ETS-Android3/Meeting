@@ -34,6 +34,11 @@ import static com.example.jordan.meeting.R.layout.view_attendee_entry;
 
 public class MeetingView extends AppCompatActivity implements android.view.View.OnClickListener{
 
+    private static final int MAPS_REQUEST_CODE = 1;
+    private static final int SETTINGS_REQUEST_CODE = 2;
+    private static final int MEETING_EDIT_REQUEST_CODE = 3;
+    public static final int ACCOUNT_REQUEST_CODE = 4;
+
     private String tag = "events";
     private int _Meeting_Id;
     private Meeting meeting;
@@ -99,9 +104,6 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
 
         /* Setting fields */
         refresh();
-
-        /* Initializing connection to Google Calendar */
-        googleCalendarTask = new GoogleCalendarTask(meeting, this);
     }
 
     @Override
@@ -117,18 +119,23 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
             case R.id.action_settings:
                 Log.d(tag, "Action settings");
                 Intent intent = new Intent(this, Settings.class);
-                startActivityForResult(intent, 60);
+                startActivityForResult(intent, SETTINGS_REQUEST_CODE);
                 return true;
 
             case R.id.action_edit:
                 Log.d(tag, "Action edit");
                 Intent indent = new Intent(getApplicationContext(), MeetingEdit.class);
                 indent.putExtra("meeting_Id", _Meeting_Id);
-                startActivityForResult(indent, 30);
+                startActivityForResult(indent, MEETING_EDIT_REQUEST_CODE);
                 return true;
 
             case R.id.action_google_calendar:
                 Log.d(tag, "Action sync calendar");
+
+                /* Initializing connection to Google API */
+                googleCalendarTask = new GoogleCalendarTask(meeting, this);
+
+                /* Adding event to Google calendar */
                 googleCalendarTask.execute();
 
             default:
@@ -143,26 +150,30 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
         if (resultCode == RESULT_OK){
             switch (requestCode){
 
-                case 30:
+                case MEETING_EDIT_REQUEST_CODE:
                     if (data.hasExtra("returnKey")) {
                         String returnKey = Objects.requireNonNull(data.getExtras()).getString("returnKey");
-                        Toast.makeText(this, returnKey, Toast.LENGTH_SHORT).show();
 
                         /* Finishing if the meeting has been deleted */
                         if (Objects.requireNonNull(returnKey).equals(getString(R.string.return_key_delete))) {
                             finish();
                         }
-                    }
 
-                case 40:
+                        Toast.makeText(this, returnKey, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+
+                case MAPS_REQUEST_CODE:
 
                     /* Resetting clickable text field feedback */
                     textLocation.setTextColor(0);
+                    break;
 
-                case 60:
+                case ACCOUNT_REQUEST_CODE:
 
                     /* Getting Google account name */
                     googleCalendarTask.getAccountName(data);
+                    break;
             }
 
         }
@@ -188,11 +199,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
         String prefFontSize = sharedPref.getString("fontSize", "-1");
         final String prefFontColor = sharedPref.getString("fontColor", "-1");
         Log.d(tag, "updateFontStyle size: " + prefFontSize + " color " + prefFontColor);
-
-        if (!prefFontSize.equals("-1"))
-            fontSize = Float.valueOf(prefFontSize);
-        else
-            Log.d(tag, "Error while reading font size preference");
+        fontSize = Float.valueOf(prefFontSize);
 
         switch (Integer.valueOf(prefFontColor)){
             case 1:
@@ -270,7 +277,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
 
                 Intent indent = new Intent(getApplicationContext(), Maps.class);
                 indent.putExtra("meeting_Id", _Meeting_Id);
-                startActivityForResult(indent, 40);
+                startActivityForResult(indent, MAPS_REQUEST_CODE);
         }
     }
 }
