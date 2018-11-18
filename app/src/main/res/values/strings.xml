@@ -98,4 +98,5 @@
     <string name="menu_google_calendar_title">Add to Google Calendar</string>
     <string name="toast_google_calendar_sync_fail">Google Calendar sync failed, sorry!</string>
     <string name="toast_google_calendar_sync_success">Added to Google Calendar</string>
+    <string name="feedback_attendee_removed">removed from attendee list</string>
 </resources>

@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.jordan.meeting.R;
 import com.example.jordan.meeting.components.UnrolledListView;
@@ -157,6 +158,8 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         attendeeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                /* Remove attendee from the meeting */
                 deleteAttendee(parent, view);
             }
         });
@@ -392,10 +395,12 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
 
     private void deleteAttendee(AdapterView<?> parent, View view) {
         Log.d(tag, "MeetingEdit deleteAttendee");
+        String attendeeName;
 
         /* Updating AttendTo table */
         TextView textAttendeeId = view.findViewById(R.id.attendee_Id);
         int attendeeId = Integer.valueOf(textAttendeeId.getText().toString());
+        attendeeName = attendeeRepo.getAttendeeById(attendeeId).name;
         attendToRepo.delete(attendeeId, _Meeting_Id);
 
         /* Delete the attendee if this one does not attend any meeting */
@@ -426,6 +431,10 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         ListAdapter adapter = new SimpleAdapter(parent.getContext(), attendeeList, edit_attendee_entry,
                 new String[]{"id", "name"}, new int[]{R.id.attendee_Id, R.id.attendee_name});
         attendeeListView.setAdapter(adapter);
+
+        /* User feedback */
+        Toast.makeText(parent.getContext(), attendeeName + getString(R.string.feedback_attendee_removed),
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
