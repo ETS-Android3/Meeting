@@ -38,6 +38,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
     private static final int SETTINGS_REQUEST_CODE = 2;
     private static final int MEETING_EDIT_REQUEST_CODE = 3;
     public static final int ACCOUNT_REQUEST_CODE = 4;
+    public static final int PERMISSION_REQUEST_CODE = 5;
 
     private String tag = "events";
     private int _Meeting_Id;
@@ -170,9 +171,26 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
                     break;
 
                 case ACCOUNT_REQUEST_CODE:
+                    Log.d(tag, "User requested for account");
 
                     /* Getting Google account name */
                     googleCalendarTask.getAccountName(data);
+
+                    /* User has been asked for account, let's try again */
+                    if (googleCalendarTask.retry) {
+                        googleCalendarTask = new GoogleCalendarTask(meeting, this);
+                        googleCalendarTask.execute();
+                    }
+                    break;
+
+                case PERMISSION_REQUEST_CODE:
+                    Log.d(tag, "User requested for permission");
+
+                    /* User has been asked for permission, let's try again */
+                    if (googleCalendarTask.retry) {
+                        googleCalendarTask = new GoogleCalendarTask(meeting, this);
+                        googleCalendarTask.execute();
+                    }
                     break;
             }
 

@@ -51,12 +51,12 @@
                     android:id="@+id/imageDate"
                     android:padding="5dp"/>
 
-                <EditText
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:id="@+id/editTextDate"
-                    android:layout_gravity="center_vertical"/>
+                    android:id="@+id/textDate"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="10pt"/>
 
             </LinearLayout>
 
@@ -71,13 +71,13 @@
                     android:padding="5dp"
                     android:id="@+id/imageTime"/>
 
-                <EditText
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="time"
                     android:ems="10"
-                    android:id="@+id/editTextTime"
-                    android:layout_gravity="center_vertical"/>
+                    android:id="@+id/textTime"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="10pt"/>
 
             </LinearLayout>
 

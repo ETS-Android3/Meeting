@@ -84,8 +84,8 @@
     <string name="prompt_address_not_found">Address not found, sorry !</string>
     <string name="actionbar_title_settings">Settings</string>
     <string name="hint_meeting_name">Meeting Name</string>
-    <string name="hint_date">Date</string>
-    <string name="hint_time">Time</string>
+    <string name="hint_date">Set date</string>
+    <string name="hint_time">Set time</string>
     <string name="hint_location">Location</string>
     <string name="hint_note">Note</string>
     <string name="hint_new_attendee">New attendee</string>
@@ -95,5 +95,7 @@
     <string name="menu_delete_title">Delete</string>
     <string name="menu_edit_title">Edit</string>
     <string name="google_calendar_description">Added by means of Meeting application</string>
-    <string name="menu_google_calendar_title">Sync with Google Calendar</string>
+    <string name="menu_google_calendar_title">Add to Google Calendar</string>
+    <string name="toast_google_calendar_sync_fail">Google Calendar sync failed, sorry!</string>
+    <string name="toast_google_calendar_sync_success">Added to Google Calendar</string>
 </resources>

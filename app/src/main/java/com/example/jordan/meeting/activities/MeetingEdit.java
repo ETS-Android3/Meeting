@@ -1,6 +1,10 @@
 package com.example.jordan.meeting.activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
@@ -17,6 +22,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.jordan.meeting.R;
 import com.example.jordan.meeting.components.ExpandableHeightListView;
@@ -27,8 +33,11 @@ import com.example.jordan.meeting.repositories.AttendToRepo;
 import com.example.jordan.meeting.repositories.AttendeeRepo;
 import com.example.jordan.meeting.repositories.MeetingRepo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.example.jordan.meeting.R.layout.edit_attendee_entry;
@@ -38,9 +47,10 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
 
     ImageButton btnNewAttendee;
 
+    TextView textDate;
+    TextView textTime;
+
     EditText editTextName;
-    EditText editTextDate;
-    EditText editTextTime;
     EditText editTextAttendee;
     EditText editTextLocation;
     EditText editTextNotes;
@@ -54,6 +64,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
     MeetingRepo meetingRepo;
 
     private int _Meeting_Id = 0;
+    Meeting meeting;
 
     String returnKey = "";
     String newAttendee = "";
@@ -76,8 +87,8 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         btnNewAttendee = findViewById(R.id.btnNewAttendee);
 
         editTextName = findViewById(R.id.editTextName);
-        editTextDate = findViewById(R.id.editTextDate);
-        editTextTime = findViewById(R.id.editTextTime);
+        textDate = findViewById(R.id.textDate);
+        textTime = findViewById(R.id.textTime);
         editTextAttendee = findViewById(R.id.editTextAttendee);
         editTextLocation = findViewById(R.id.editTextLocation);
         editTextNotes = findViewById(R.id.editTextNotes);
@@ -88,6 +99,8 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         attendeeListView.setExpanded(true);
 
         btnNewAttendee.setOnClickListener(this);
+        textDate.setOnClickListener(this);
+        textTime.setOnClickListener(this);
 
         attendeeRepo = new AttendeeRepo(this);
         attendToRepo = new AttendToRepo(this);
@@ -96,15 +109,17 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         /* Getting selected meeting */
         Intent intent = getIntent();
         _Meeting_Id = intent.getIntExtra("meeting_Id", 0);
-        Meeting meeting = meetingRepo.getMeetingById(_Meeting_Id);
+        meeting = meetingRepo.getMeetingById(_Meeting_Id);
 
         /* Setting meeting info */
         editTextName.setText(meeting.name);
         editTextName.setHint(getString(R.string.hint_meeting_name));
-        editTextDate.setText(meeting.date);
-        editTextDate.setHint(R.string.hint_date);
-        editTextTime.setText(meeting.time);
-        editTextTime.setHint(R.string.hint_time);
+        textDate.setText(meeting.date);
+        textDate.setHint(R.string.hint_date);
+        textDate.setTextColor(getColor(R.color.colorBlack));
+        textTime.setText(meeting.time);
+        textTime.setHint(R.string.hint_time);
+        textTime.setTextColor(getColor(R.color.colorBlack));
         editTextLocation.setText(meeting.location);
         editTextLocation.setHint(R.string.hint_location);
         editTextNotes.setText(meeting.notes);
@@ -146,7 +161,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         attendeeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            deleteAttendee(parent, view);
+                deleteAttendee(parent, view);
             }
         });
         ArrayList<Integer> idList = attendToRepo.getAttendeeIDs(_Meeting_Id);
@@ -179,8 +194,8 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
                 Log.d(tag, "Action save");
                 Meeting meeting = new Meeting();
                 meeting.name = editTextName.getText().toString();
-                meeting.time = editTextTime.getText().toString();
-                meeting.date = editTextDate.getText().toString();
+                meeting.time = textTime.getText().toString();
+                meeting.date = textDate.getText().toString();
                 meeting.location = editTextLocation.getText().toString();
                 meeting.notes = editTextNotes.getText().toString();
                 meeting.meeting_ID = _Meeting_Id;
@@ -225,6 +240,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
     @Override
     public void onClick(View view) {
         Log.d(tag, "MeetingEdit onClick");
+        final Calendar calendar = Calendar.getInstance();
         switch (view.getId()) {
             case R.id.btnNewAttendee:
                 newAttendee = editTextAttendee.getText().toString();
@@ -258,6 +274,78 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
                 /* Add the new attendee to this meeting */
                 addAttendee(attendeeID);
                 editTextAttendee.setText("");
+                break;
+
+            case R.id.textDate:
+
+                /* Printing user feedback */
+                textDate.setTextColor(getColor(R.color.colorAccent));
+
+                /* Show date picker dialog */
+                DatePickerDialog dateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        Log.d(tag, "Date set: " + monthOfYear + "/" + dayOfMonth + "/" + year);
+                        Calendar newDate = Calendar.getInstance();
+                        newDate.set(year, monthOfYear, dayOfMonth);
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat(
+                                "MM/dd/yyyy", Locale.ENGLISH);
+                        textDate.setText(dateFormatter.format(newDate.getTime()));
+                        meeting.date = dateFormatter.format(newDate.getTime());
+                        textDate.setTextColor(getColor(R.color.colorBlack));
+                    }
+
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+                dateDialog.setOnCancelListener(new DatePickerDialog.OnCancelListener(){
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                        /* Resetting user feedback */
+                        textDate.setTextColor(getColor(R.color.colorBlack));
+                    }
+                });
+
+                dateDialog.show();
+                break;
+
+            case R.id.textTime:
+
+                /* Printing user feedback */
+                textTime.setTextColor(getColor(R.color.colorAccent));
+
+                /* Show time picker dialog */
+                TimePickerDialog timeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Log.d(tag, "Time set: " + hourOfDay + ":" + minute);
+                        Calendar newDate = Calendar.getInstance();
+                        newDate.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                                calendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
+                        SimpleDateFormat timeFormatter = new SimpleDateFormat(
+                                "HH:mm", Locale.ENGLISH);
+                        textTime.setText(timeFormatter.format(newDate.getTime()));
+                        meeting.time = timeFormatter.format(newDate.getTime());
+                        textTime.setTextColor(getColor(R.color.colorBlack));
+                    }
+
+                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+
+                timeDialog.setOnCancelListener(new TimePickerDialog.OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                        /* Resetting user feedback */
+                        textTime.setTextColor(getColor(R.color.colorBlack));
+
+                    }
+                });
+
+                timeDialog.show();
                 break;
         }
     }
