@@ -105,7 +105,7 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
         Event event = new Event()
                 .setSummary(meeting.name)
                 .setLocation(meeting.location)
-                .setDescription(meetingView.getString(R.string.google_calendar_description));
+                .setDescription(meeting.notes);
 
         /* Parsing the meeting date */
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy-HH:mm", Locale.ENGLISH);
