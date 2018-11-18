@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jordan.meeting.R;
-import com.example.jordan.meeting.components.ExpandableHeightListView;
+import com.example.jordan.meeting.components.UnrolledListView;
 import com.example.jordan.meeting.database.Meeting;
 import com.example.jordan.meeting.repositories.AttendToRepo;
 import com.example.jordan.meeting.repositories.AttendeeRepo;
@@ -48,7 +48,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
     AttendToRepo attendToRepo;
     AttendeeRepo attendeeRepo;
 
-    ExpandableHeightListView attendeeListView;
+    UnrolledListView attendeeListView;
 
     TextView textName;
     TextView textDate;
@@ -96,9 +96,6 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
         textTime = findViewById(R.id.textTime);
         textLocation = findViewById(R.id.textLocation);
         textNotes = findViewById(R.id.textNotes);
-
-        /* Hacking ListView component */
-        attendeeListView.setExpanded(true);
 
         /* Click listener */
         textLocation.setOnClickListener(this);

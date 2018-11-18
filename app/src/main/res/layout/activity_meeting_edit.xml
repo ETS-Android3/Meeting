@@ -119,7 +119,7 @@
                 android:id="@+id/spnAttendee"
                 android:padding="5dp" />
 
-            <com.example.jordan.meeting.components.ExpandableHeightListView
+            <com.example.jordan.meeting.components.UnrolledListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/attendeeList"

@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.jordan.meeting.R;
-import com.example.jordan.meeting.components.ExpandableHeightListView;
+import com.example.jordan.meeting.components.UnrolledListView;
 import com.example.jordan.meeting.database.AttendTo;
 import com.example.jordan.meeting.database.Attendee;
 import com.example.jordan.meeting.database.Meeting;
@@ -35,7 +35,6 @@ import com.example.jordan.meeting.repositories.MeetingRepo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -55,7 +54,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
     EditText editTextLocation;
     EditText editTextNotes;
 
-    ExpandableHeightListView attendeeListView;
+    UnrolledListView attendeeListView;
 
     Spinner spnAttendees;
 
@@ -94,9 +93,6 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         editTextNotes = findViewById(R.id.editTextNotes);
         attendeeListView = findViewById(R.id.attendeeList);
         spnAttendees = findViewById(R.id.spnAttendee);
-
-        /* Hacking ListView component */
-        attendeeListView.setExpanded(true);
 
         btnNewAttendee.setOnClickListener(this);
         textDate.setOnClickListener(this);

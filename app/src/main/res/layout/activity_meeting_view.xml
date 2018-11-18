@@ -98,7 +98,7 @@
                 android:background="@color/meeting_attendee_background"
                 android:layout_margin="5dp"/>
 
-            <com.example.jordan.meeting.components.ExpandableHeightListView
+            <com.example.jordan.meeting.components.UnrolledListView
                 android:id="@+id/attendeeList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
