@@ -111,10 +111,28 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
         /* Setting meeting info */
         editTextName.setText(meeting.name);
         editTextName.setHint(getString(R.string.hint_meeting_name));
-        textDate.setText(meeting.date);
+
+        /* Pre-selecting current date for meeting date */
+        if (_Meeting_Id != 0)
+            textDate.setText(meeting.date);
+        else {
+            final Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(
+                    "MM/dd/yyyy", Locale.ENGLISH);
+            textDate.setText(dateFormatter.format(calendar.getTime()));
+        }
         textDate.setHint(R.string.hint_date);
         textDate.setTextColor(getColor(R.color.colorBlack));
-        textTime.setText(meeting.time);
+
+        /* Pre-selecting current time for meeting time */
+        if (_Meeting_Id != 0)
+            textTime.setText(meeting.time);
+        else {
+            final Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat timeFormatter = new SimpleDateFormat(
+                    "HH:mm", Locale.ENGLISH);
+            textTime.setText(timeFormatter.format(calendar.getTime()));
+        }
         textTime.setHint(R.string.hint_time);
         textTime.setTextColor(getColor(R.color.colorBlack));
         editTextLocation.setText(meeting.location);
@@ -192,7 +210,10 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
             case R.id.action_save:
                 Log.d(tag, "Action save");
                 Meeting meeting = new Meeting();
-                meeting.name = editTextName.getText().toString();
+                if (editTextName.getText().toString().equals(""))
+                    meeting.name = "Meeting Name";
+                else
+                    meeting.name = editTextName.getText().toString();
                 meeting.time = textTime.getText().toString();
                 meeting.date = textDate.getText().toString();
                 meeting.location = editTextLocation.getText().toString();
