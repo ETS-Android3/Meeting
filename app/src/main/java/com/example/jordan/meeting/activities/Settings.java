@@ -192,9 +192,10 @@ public class Settings extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_google_account_name)));
 
             /* Setting listener */
-            findPreference(getString(R.string.pref_key_google_account)).setOnPreferenceClickListener(this);
+            findPreference(getString(R.string.pref_key_google_account_name)).setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -210,7 +211,7 @@ public class Settings extends AppCompatPreferenceActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
 
-            if (preference.getKey().equals(getString(R.string.pref_key_google_account))) {
+            if (preference.getKey().equals(getString(R.string.pref_key_google_account_name))) {
                 Log.d("onPreferenceClick", "googleAccount");
                 startActivityForResult(AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
                         false, null, null, null, null), REQUEST_CODE_GOOGLE_ACCOUNT);
@@ -226,10 +227,15 @@ public class Settings extends AppCompatPreferenceActivity {
             if (requestCode == REQUEST_CODE_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
                 String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                 Log.d("GooglePreferenceFragment", "Account picked: " + accountName);
+
+                /* Updating shared preferences */
                 SharedPreferences settings = getPreferenceManager().getSharedPreferences();
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(getString(R.string.pref_key_account_name), accountName);
+                editor.putString(getString(R.string.pref_key_google_account_name), accountName);
                 editor.apply();
+
+                /* Updating summary */
+                bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_google_account_name)));
             }
         }
     }

@@ -59,7 +59,7 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
             credential.setSelectedAccountName(accountName);
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(meetingView);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(meetingView.getString(R.string.pref_key_account_name), accountName);
+            editor.putString(meetingView.getString(R.string.pref_key_google_account_name), accountName);
             editor.apply();
         }
     }
@@ -72,9 +72,10 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
         credential =
                 GoogleAccountCredential.usingOAuth2(meetingView, Collections.singleton(CalendarScopes.CALENDAR));
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(meetingView);
-        Log.d(tag, "Google account name: " + sharedPref.getString(meetingView.getString(R.string.pref_key_account_name),
+        Log.d(tag, "Google account name: " + sharedPref.getString(meetingView.getString(R.string.pref_key_google_account_name),
                 null));
-        credential.setSelectedAccountName(sharedPref.getString("accountName", null));
+        credential.setSelectedAccountName(sharedPref.getString(meetingView.getString(R.string.pref_key_google_account_name),
+                null));
 
         /* Getting Google calendar client */
         com.google.api.services.calendar.Calendar client = new com.google.api.services.calendar.Calendar.Builder(
