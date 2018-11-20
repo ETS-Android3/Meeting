@@ -1,10 +1,10 @@
 package com.example.jordan.meeting.activities;
 
 import android.accounts.AccountManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -57,9 +57,9 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
                 Objects.requireNonNull(data.getExtras()).getString(AccountManager.KEY_ACCOUNT_NAME);
         if (accountName != null) {
             credential.setSelectedAccountName(accountName);
-            SharedPreferences settings = meetingView.getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("accountName", accountName);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(meetingView);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(meetingView.getString(R.string.pref_key_account_name), accountName);
             editor.apply();
         }
     }
@@ -71,8 +71,10 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
         /* Getting Google account credential */
         credential =
                 GoogleAccountCredential.usingOAuth2(meetingView, Collections.singleton(CalendarScopes.CALENDAR));
-        SharedPreferences settings = meetingView.getPreferences(Context.MODE_PRIVATE);
-        credential.setSelectedAccountName(settings.getString("accountName", null));
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(meetingView);
+        Log.d(tag, "Google account name: " + sharedPref.getString(meetingView.getString(R.string.pref_key_account_name),
+                null));
+        credential.setSelectedAccountName(sharedPref.getString("accountName", null));
 
         /* Getting Google calendar client */
         com.google.api.services.calendar.Calendar client = new com.google.api.services.calendar.Calendar.Builder(

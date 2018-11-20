@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -97,7 +96,7 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, 14.0f));
         } else {
             Log.d(tag, "Address not found");
-            Toast.makeText(this, R.string.prompt_address_not_found, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.feedback_address_not_found, Toast.LENGTH_LONG).show();
         }
     }
 

@@ -26,24 +26,37 @@
     <!-- Return keys -->
     <string name="return_key_delete">Meeting Record Deleted</string>
     <string name="return_key_insert">New Meeting Insert</string>
+    <string name="return_key_update">Meeting Record updated</string>
+
+    <!-- Feedbacks -->
+    <string name="feedback_attendee_removed">removed from attendee list</string>
+    <string name="feedback_address_not_found">Address not found, sorry !</string>
+    <string name="toast_google_calendar_sync_fail">Google Calendar sync failed, sorry!</string>
+    <string name="toast_google_calendar_sync_success">Added to Google Calendar</string>
 
     <string name="prompt_existing_attendee">Existing attendee</string>
-    <string name="return_key_update">Meeting Record updated</string>
-    <string name="prompt_address_not_found">Address not found, sorry !</string>
     <string name="actionbar_title_settings">Settings</string>
+
+    <!-- Hints -->
     <string name="hint_meeting_name">Meeting Name</string>
     <string name="hint_date">Set date</string>
     <string name="hint_time">Set time</string>
     <string name="hint_location">Location</string>
     <string name="hint_note">Note</string>
     <string name="hint_new_attendee">New attendee</string>
-    <string name="meeting_name_field">Meeting name</string>
+
+    <!-- Menus -->
     <string name="menu_settings_title">Settings</string>
     <string name="menu_save_title">Save</string>
     <string name="menu_delete_title">Delete</string>
     <string name="menu_edit_title">Edit</string>
     <string name="menu_google_calendar_title">Add to Google Calendar</string>
-    <string name="toast_google_calendar_sync_fail">Google Calendar sync failed, sorry!</string>
-    <string name="toast_google_calendar_sync_success">Added to Google Calendar</string>
-    <string name="feedback_attendee_removed">removed from attendee list</string>
+
+    <!-- Preferences -->
+    <string name="pref_google_calendar">Google Calendar</string>
+    <string name="pref_title_google_account">Google account</string>
+    <string name="pref_key_account_name">accountName</string>
+    <string name="pref_key_google_account">googleAccount</string>
+
+    <string name="meeting_name_field">Meeting name</string>
 </resources>
