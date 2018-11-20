@@ -22,9 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jordan.meeting.R;
+import com.example.jordan.meeting.database.Meeting;
 import com.example.jordan.meeting.repositories.MeetingRepo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -164,8 +166,27 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
                 fontColor = Color.BLACK;
         }
 
+        /* Sorting meeting list by date */
+        ArrayList<Meeting> meetingListSort = new ArrayList<>();
+        for (HashMap<String, String> map : repo.getMeetingList()){
+            Meeting meeting = new Meeting(Integer.valueOf(map.get("id")),
+                    map.get("name"), map.get("date"), map.get("time"));
+            meetingListSort.add(meeting);
+        }
+        Log.d(tag, "Meeting list: " + meetingListSort);
+        Collections.sort(meetingListSort);
+        Log.d(tag, "Sorted meeting list: " + meetingListSort);
+        ArrayList<HashMap<String, String>> meetingList = new ArrayList<>();
+        for (Meeting meeting : meetingListSort){
+            HashMap<String, String> map = new HashMap<>();
+            map.put("id", String.valueOf(meeting.meeting_ID));
+            map.put("name", String.valueOf(meeting.name));
+            map.put("date", String.valueOf(meeting.date));
+            map.put("time", String.valueOf(meeting.time));
+            meetingList.add(map);
+        }
+
         /* Hacking ListView adapter to update font style */
-        ArrayList<HashMap<String, String>> meetingList = repo.getMeetingList();
         ListAdapter adapter = new SimpleAdapter(Main.this, meetingList, meeting_entry,
                 new String[]{"id", "name", "date"}, new int[]{R.id.meeting_Id, R.id.meeting_name, R.id.meeting_date}){
             @Override
