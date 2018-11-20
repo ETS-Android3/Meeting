@@ -9,7 +9,7 @@
     <string name="pref_header_general">General</string>
 
     <string name="pref_title_font_size">Font size</string>
-    <string name="pref_default_font_size">12</string>
+    <string name="pref_default_font_size">10</string>
 
     <string name="pref_title_chose_font_color">Font color</string>
     <string-array name="pref_font_color_titles">
@@ -29,7 +29,7 @@
     <string name="return_key_update">Meeting Record updated</string>
 
     <!-- Feedbacks -->
-    <string name="feedback_attendee_removed">removed from attendee list</string>
+    <string name="feedback_attendee_removed">" removed from attendees"</string>
     <string name="feedback_address_not_found">Address not found, sorry !</string>
     <string name="toast_google_calendar_sync_fail">Google Calendar sync failed, sorry!</string>
     <string name="toast_google_calendar_sync_success">Added to Google Calendar</string>

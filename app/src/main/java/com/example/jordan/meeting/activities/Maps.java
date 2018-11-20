@@ -25,16 +25,8 @@ import java.util.Locale;
 
 public class Maps extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private int _Meeting_Id;
     private Meeting meeting;
-
-    private MeetingRepo meetingRepo;
     private String tag = "events";
-
-    private Address meetingAddress;
-    private LatLng meetingPoint = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +39,11 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         /* Create repositories */
-        meetingRepo = new MeetingRepo(this);
+        MeetingRepo meetingRepo = new MeetingRepo(this);
 
         /* Getting meeting */
         Intent intent = getIntent();
-        _Meeting_Id = intent.getIntExtra("meeting_Id", 0);
+        int _Meeting_Id = intent.getIntExtra("meeting_Id", 0);
         meeting = meetingRepo.getMeetingById(_Meeting_Id);
 
         /* Setting actionBar */
@@ -76,7 +68,6 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(tag, "Maps onMapReady");
-        mMap = googleMap;
         List<Address> AddressList = null;
 
         /* Get Address from location String */
@@ -88,12 +79,12 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback {
         }
         if ((AddressList != null) && (!AddressList.isEmpty())) {
             Log.d(tag, "Address found: " + AddressList.get(0).toString());
-            meetingAddress = AddressList.get(0);
-            meetingPoint = new LatLng(meetingAddress.getLatitude(), meetingAddress.getLongitude());
+            Address meetingAddress = AddressList.get(0);
+            LatLng meetingPoint = new LatLng(meetingAddress.getLatitude(), meetingAddress.getLongitude());
 
             /* Add a marker on the meeting place, move the camera and zoom */
-            mMap.addMarker(new MarkerOptions().position(meetingPoint).title(meetingAddress.getAddressLine(0)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, 14.0f));
+            googleMap.addMarker(new MarkerOptions().position(meetingPoint).title(meetingAddress.getAddressLine(0)));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingPoint, 14.0f));
         } else {
             Log.d(tag, "Address not found");
             Toast.makeText(this, R.string.feedback_address_not_found, Toast.LENGTH_LONG).show();
