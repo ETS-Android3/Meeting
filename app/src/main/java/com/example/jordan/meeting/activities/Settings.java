@@ -15,6 +15,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.jordan.meeting.R;
@@ -114,6 +115,27 @@ public class Settings extends AppCompatPreferenceActivity {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.actionbar_title_settings);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /* Inflating menu */
+        getMenuInflater().inflate(R.menu.toolbar_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_done:
+                Log.d(tag, "Action done");
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
     }
 

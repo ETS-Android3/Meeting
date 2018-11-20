@@ -9,7 +9,7 @@
 
     <header
         android:fragment="com.example.jordan.meeting.activities.Settings$GooglePreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
+        android:icon="@drawable/ic_perm_contact_calendar_black_24dp"
         android:title="@string/pref_google_calendar" />
 
 </preference-headers>
