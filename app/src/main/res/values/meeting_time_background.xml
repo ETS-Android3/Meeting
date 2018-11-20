@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="meeting_note_background">#FFFFFF</color>
+    <color name="meeting_time_background">#FFFFFF</color>
 </resources>
