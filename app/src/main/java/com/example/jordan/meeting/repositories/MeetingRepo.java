@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class MeetingRepo {
     private DBHelper dbHelper;
-    String tag = "events";
+    private String tag = "events";
 
     public MeetingRepo(Context context) {
         Log.d(tag, "MeetingRepo constructor");
@@ -111,7 +111,6 @@ public class MeetingRepo {
                 + " WHERE " +
                 Meeting.KEY_ID + "=?";// It's a good practice to use parameter ?, instead of concatenate string
 
-        int iCount = 0;
         Meeting meeting = new Meeting();
 
         Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(Id)});

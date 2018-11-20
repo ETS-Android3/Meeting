@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class AttendToRepo {
     private DBHelper dbHelper;
-    String tag = "events";
+    private String tag = "events";
 
     public AttendToRepo(Context context) {
         Log.d(tag, "AttendToRepo constructor");
@@ -68,7 +68,6 @@ public class AttendToRepo {
                 + " WHERE " +
                 AttendTo.KEY_meeting + "=?";// It's a good practice to use parameter ?, instead of concatenate string
 
-        int iCount = 0;
         Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(meetingId)});
         if (cursor.moveToFirst()) {
             do {
@@ -91,7 +90,6 @@ public class AttendToRepo {
                 + " WHERE " +
                 AttendTo.KEY_attendee + "=?";// It's a good practice to use parameter ?, instead of concatenate string
 
-        int iCount = 0;
         Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(attendee_ID)});
         if (cursor.moveToFirst()) {
             do {
