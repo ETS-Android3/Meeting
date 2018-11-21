@@ -64,6 +64,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(tag, "MeetingView onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_view);
 

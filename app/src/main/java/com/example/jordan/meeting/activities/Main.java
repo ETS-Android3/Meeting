@@ -55,6 +55,7 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(tag, "Main onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -77,6 +78,9 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
                 Intent indent = new Intent(getApplicationContext(), MeetingView.class);
                 indent.putExtra("meeting_Id", Integer.parseInt(meetingId));
                 startActivityForResult(indent, MEETING_VIEW_REQUEST_CODE);
+
+                /* Setting activity transition */
+                overridePendingTransition(R.anim.translate_in_from_right, R.anim.translate_out_to_left);
             }
         });
 
@@ -85,6 +89,14 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
 
         /* Setting ListView adapter */
         updateFontStyle();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        /* Setting activity transition */
+        overridePendingTransition(R.anim.translate_in_from_left, R.anim.translate_out_to_right);
     }
 
     @Override
