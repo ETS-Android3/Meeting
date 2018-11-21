@@ -114,6 +114,9 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
             Intent intent = new Intent(this, MeetingEdit.class);
             intent.putExtra("meeting", 0);
             startActivityForResult(intent, MEETING_EDIT_REQUEST_CODE);
+
+            /* Setting activity transition */
+            overridePendingTransition(R.anim.translate_in_from_right, R.anim.translate_out_to_left);
         }
     }
 
