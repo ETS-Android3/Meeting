@@ -59,4 +59,6 @@
 
     <string name="meeting_name_field">Meeting name</string>
     <string name="menu_done_title">Done</string>
+    <string name="tab_title_current_meeting">Current</string>
+    <string name="tab_title_past_meeting">Past</string>
 </resources>

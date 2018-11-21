@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -56,6 +57,22 @@ public class Meeting implements Comparable<Meeting> {
         }
         Log.d("Meeting", this + " compared to " + meeting + " = " + thisDate.compareTo(date));
         return thisDate.compareTo(date);
+    }
+
+    public boolean isPast(){
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy-HH:mm", Locale.ENGLISH);
+        Date date;
+        try {
+            date = new Date(dateFormatter.parse(this.date + "-" + this.time).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d("Meeting", "Parse error");
+            return false;
+        }
+
+        int compare = date.compareTo(Calendar.getInstance().getTime());
+
+        return (compare < 0);
     }
 
     @Override
