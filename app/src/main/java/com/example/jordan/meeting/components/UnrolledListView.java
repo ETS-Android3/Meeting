@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-
 /* The idea of this ListView hack has been found on Stackoverflow here :
  * https://stackoverflow.com/questions/18353515/how-to-make-multiplelistview-in-scrollview/18354096#18354096
  */

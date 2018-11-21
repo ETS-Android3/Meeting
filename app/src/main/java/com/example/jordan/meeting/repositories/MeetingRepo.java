@@ -14,9 +14,9 @@ import java.util.HashMap;
 
 public class MeetingRepo {
     private DBHelper dbHelper;
-    private String tag = "events";
 
     public MeetingRepo(Context context) {
+        String tag = "events";
         Log.d(tag, "MeetingRepo constructor");
         dbHelper = new DBHelper(context);
     }

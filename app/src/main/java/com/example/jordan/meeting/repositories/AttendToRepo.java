@@ -20,7 +20,7 @@ public class AttendToRepo {
         dbHelper = new DBHelper(context);
     }
 
-    public int insert(AttendTo attendTo) {
+    public void insert(AttendTo attendTo) {
 
         //Open connection to write data
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -29,9 +29,8 @@ public class AttendToRepo {
         values.put(AttendTo.KEY_meeting, attendTo.meeting_ID);
 
         // Inserting Row
-        long attendTo_Id = db.insert(AttendTo.TABLE, null, values);
+        db.insert(AttendTo.TABLE, null, values);
         db.close(); // Closing database connection
-        return (int) attendTo_Id;
     }
 
     public void delete(int attendee_ID, int meeting_ID) {
@@ -43,7 +42,7 @@ public class AttendToRepo {
         db.close(); // Closing database connection
     }
 
-    public void update(AttendTo attendTo) {
+    /*public void update(AttendTo attendTo) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -56,7 +55,7 @@ public class AttendToRepo {
                 AttendTo.KEY_attendee + "= ?" + " AND " + AttendTo.KEY_meeting + "= ?",
                 new String[]{String.valueOf(attendTo.attendee_ID), String.valueOf(attendTo.meeting_ID)});
         db.close(); // Closing database connection
-    }
+    }*/
 
     public ArrayList<Integer> getAttendeeIDs(int meetingId) {
         Log.d(tag, "AttendToRepo getAttendeeIDs " + meetingId);

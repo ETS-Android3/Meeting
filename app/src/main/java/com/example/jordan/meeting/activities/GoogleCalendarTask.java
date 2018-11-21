@@ -1,6 +1,7 @@
 package com.example.jordan.meeting.activities;
 
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -42,6 +43,7 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
     private final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     private String tag = "events";
     private Meeting meeting;
+    @SuppressLint("StaticFieldLeak")
     private MeetingView meetingView;
     boolean retry = false;
 

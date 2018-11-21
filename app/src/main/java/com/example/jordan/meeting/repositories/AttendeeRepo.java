@@ -43,7 +43,7 @@ public class AttendeeRepo {
         db.close(); // Closing database connection
     }
 
-    public void update(Attendee attendee) {
+    /*public void update(Attendee attendee) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -52,7 +52,7 @@ public class AttendeeRepo {
         // It's a good practice to use parameter ?, instead of concatenate string
         db.update(Attendee.TABLE, values, Attendee.KEY_ID + "= ?", new String[]{String.valueOf(attendee.attendee_ID)});
         db.close(); // Closing database connection
-    }
+    }*/
 
     public ArrayList<HashMap<String, String>> getAttendeeList() {
         //Open connection to read only
