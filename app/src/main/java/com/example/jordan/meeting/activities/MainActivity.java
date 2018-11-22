@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements android.view.View
 
     TabsPagerAdapter tabsPagerAdapter;
     ViewPager viewPager;
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements android.view.View
         btnNewMeeting = findViewById(R.id.btnNewMeeting);
         btnNewMeeting.setOnClickListener(this);
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout = findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_title_current_meeting));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_title_past_meeting));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements android.view.View
 
     @Override
     public void onResume(){
+        Log.d(tag, "MainActivity onResume");
         super.onResume();
 
         /* Setting activity transition */
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements android.view.View
                         Objects.requireNonNull(data.getExtras()).getString("returnKey"),
                         Toast.LENGTH_SHORT).show();
 
-            /* Updating meeting list */
+            /* Updating meeting lists */
             tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
             viewPager.setAdapter(tabsPagerAdapter);
         } else {

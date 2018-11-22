@@ -1,6 +1,5 @@
 package com.example.jordan.meeting.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -49,22 +48,18 @@ public class MeetingFragment extends Fragment {
     private int fontColor;
     private boolean isPast;
 
-    public MeetingFragment() {super();}
-
-    @SuppressLint("ValidFragment")
-    public MeetingFragment(boolean isPast){
-        super();
-        this.isPast = isPast;
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(tag, "MeetingFragment past: " + isPast + " onCreateView");
 
+        /* Retrieve meeting list type */
+        this.isPast = Objects.requireNonNull(getArguments()).getBoolean("isPast");
         return inflater.inflate(R.layout.fragment_meeting, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.d(tag, "MeetingFragment past: " + isPast + " onViewCreated");
 
         /* Setting ListView onItemClick callback function */
         meetingListView = view.findViewById(R.id.list);
@@ -88,7 +83,7 @@ public class MeetingFragment extends Fragment {
         /* Getting preferences */
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        /* Setting ListView adapter */
+        /* Setting ListView */
         updateMeetingListView();
     }
 
@@ -96,8 +91,10 @@ public class MeetingFragment extends Fragment {
 
         /* Getting preferences */
         String prefFontSize = sharedPref.getString("fontSize", "-1");
+
+        /* Updating font style */
         final String prefFontColor = sharedPref.getString("fontColor", "-1");
-        Log.d(tag, "updateMeetingListView size: " + prefFontSize + " color " + prefFontColor);
+        Log.d(tag, "updateMeetingListView past: " + isPast + " size: " + prefFontSize + " color " + prefFontColor);
         fontSize = Float.valueOf(prefFontSize);
 
         switch (Integer.valueOf(prefFontColor)){
