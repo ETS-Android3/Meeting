@@ -43,7 +43,7 @@ import java.util.Objects;
 import static com.example.jordan.meeting.R.layout.edit_attendee_entry;
 import static com.example.jordan.meeting.R.layout.spinner_attendee_entry;
 
-public class MeetingEdit extends AppCompatActivity implements android.view.View.OnClickListener {
+public class MeetingEditActivity extends AppCompatActivity implements android.view.View.OnClickListener {
 
     ImageButton btnNewAttendee;
 
@@ -72,7 +72,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(tag, "MeetingEdit onCreate");
+        Log.d(tag, "MeetingEditActivity onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_edit);
 
@@ -259,7 +259,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
 
     @Override
     public void onClick(View view) {
-        Log.d(tag, "MeetingEdit onClick");
+        Log.d(tag, "MeetingEditActivity onClick");
         final Calendar calendar = Calendar.getInstance();
         switch (view.getId()) {
             case R.id.btnNewAttendee:
@@ -415,7 +415,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
     }
 
     private void deleteAttendee(AdapterView<?> parent, View view) {
-        Log.d(tag, "MeetingEdit deleteAttendee");
+        Log.d(tag, "MeetingEditActivity deleteAttendee");
         String attendeeName;
 
         /* Updating AttendTo table */
@@ -460,7 +460,7 @@ public class MeetingEdit extends AppCompatActivity implements android.view.View.
 
     @Override
     public void finish(){
-        Log.d(tag, "MeetingEdit finish");
+        Log.d(tag, "MeetingEditActivity finish");
         Intent data = new Intent();
         if (!returnKey.isEmpty())
             data.putExtra("returnKey", returnKey);

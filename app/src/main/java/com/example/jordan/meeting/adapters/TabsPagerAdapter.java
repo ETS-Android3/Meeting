@@ -1,12 +1,14 @@
-package com.example.jordan.meeting.activities;
+package com.example.jordan.meeting.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.jordan.meeting.fragments.MeetingFragment;
+
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
-    TabsPagerAdapter(FragmentManager fragmentManager) {
+    public TabsPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 

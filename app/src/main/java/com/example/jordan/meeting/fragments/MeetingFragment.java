@@ -1,4 +1,4 @@
-package com.example.jordan.meeting.activities;
+package com.example.jordan.meeting.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.jordan.meeting.R;
+import com.example.jordan.meeting.activities.MeetingViewActivity;
 import com.example.jordan.meeting.database.Meeting;
 import com.example.jordan.meeting.repositories.MeetingRepo;
 
@@ -74,7 +75,7 @@ public class MeetingFragment extends Fragment {
                 meeting_Id = view.findViewById(R.id.meeting_Id);
                 String meetingId = meeting_Id.getText().toString();
                 Intent indent = new Intent(Objects.requireNonNull(getContext()).getApplicationContext(),
-                        MeetingView.class);
+                        MeetingViewActivity.class);
                 indent.putExtra("meeting_Id", Integer.parseInt(meetingId));
                 startActivityForResult(indent, MEETING_VIEW_REQUEST_CODE);
 
@@ -121,6 +122,8 @@ public class MeetingFragment extends Fragment {
         for (HashMap<String, String> map : repo.getMeetingList()){
             Meeting meeting = new Meeting(Integer.valueOf(map.get("id")),
                     map.get("name"), map.get("date"), map.get("time"));
+
+            /* Adding meeting to the matching list */
             if (meeting.isPast() && !this.isPast)
                 continue;
             if (!meeting.isPast() && this.isPast)

@@ -23,14 +23,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class Maps extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private Meeting meeting;
     private String tag = "events";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(tag, "Maps onCreate");
+        Log.d(tag, "MapActivity onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -67,7 +67,7 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(tag, "Maps onMapReady");
+        Log.d(tag, "MapActivity onMapReady");
         List<Address> AddressList = null;
 
         /* Get Address from location String */
@@ -93,7 +93,7 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback {
 
     @Override
     public void finish(){
-        Log.d(tag, "Maps finish");
+        Log.d(tag, "MapActivity finish");
         Intent data = new Intent();
         data.putExtra("meeting_Id", meeting.meeting_ID);
         setResult(RESULT_OK, data);

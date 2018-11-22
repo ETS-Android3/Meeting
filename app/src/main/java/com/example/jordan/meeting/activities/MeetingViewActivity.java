@@ -25,6 +25,7 @@ import com.example.jordan.meeting.database.Meeting;
 import com.example.jordan.meeting.repositories.AttendToRepo;
 import com.example.jordan.meeting.repositories.AttendeeRepo;
 import com.example.jordan.meeting.repositories.MeetingRepo;
+import com.example.jordan.meeting.tasks.GoogleCalendarTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.Objects;
 
 import static com.example.jordan.meeting.R.layout.view_attendee_entry;
 
-public class MeetingView extends AppCompatActivity implements android.view.View.OnClickListener{
+public class MeetingViewActivity extends AppCompatActivity implements android.view.View.OnClickListener{
 
     private static final int MAPS_REQUEST_CODE = 1;
     private static final int SETTINGS_REQUEST_CODE = 2;
@@ -44,9 +45,9 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
     private int _Meeting_Id;
     private Meeting meeting;
 
-    MeetingRepo meetingRepo;
-    AttendToRepo attendToRepo;
-    AttendeeRepo attendeeRepo;
+    public MeetingRepo meetingRepo;
+    public AttendToRepo attendToRepo;
+    public AttendeeRepo attendeeRepo;
 
     UnrolledListView attendeeListView;
 
@@ -63,7 +64,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(tag, "MeetingView onCreate");
+        Log.d(tag, "MeetingViewActivity onCreate");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_view);
@@ -117,13 +118,13 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Log.d(tag, "Action settings");
-                Intent intent = new Intent(this, Settings.class);
+                Intent intent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(intent, SETTINGS_REQUEST_CODE);
                 return true;
 
             case R.id.action_edit:
                 Log.d(tag, "Action edit");
-                Intent indent = new Intent(getApplicationContext(), MeetingEdit.class);
+                Intent indent = new Intent(getApplicationContext(), MeetingEditActivity.class);
                 indent.putExtra("meeting_Id", _Meeting_Id);
                 startActivityForResult(indent, MEETING_EDIT_REQUEST_CODE);
                 return true;
@@ -145,7 +146,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.d(tag, "MeetingView onActivityResult");
+        Log.d(tag, "MeetingViewActivity onActivityResult");
         if (resultCode == RESULT_OK){
             switch (requestCode){
 
@@ -199,7 +200,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
     }
 
     private void refresh() {
-        Log.d(tag, "MeetingView refresh");
+        Log.d(tag, "MeetingViewActivity refresh");
 
         /* Updating attendees list */
         ArrayList<Integer> idList = attendToRepo.getAttendeeIDs(_Meeting_Id);
@@ -276,7 +277,7 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
 
     @Override
     public void finish(){
-        Log.d(tag, "MeetingView finish");
+        Log.d(tag, "MeetingViewActivity finish");
         Intent data = new Intent();
         setResult(RESULT_OK, data);
         super.finish();
@@ -284,14 +285,14 @@ public class MeetingView extends AppCompatActivity implements android.view.View.
 
     @Override
     public void onClick(View v) {
-        Log.d(tag, "MeetingView onClick");
+        Log.d(tag, "MeetingViewActivity onClick");
         switch (v.getId()) {
             case R.id.textLocation:
 
                 /* Triggering feedback */
                 textLocation.setTextColor(getColor(R.color.colorAccent));
 
-                Intent indent = new Intent(getApplicationContext(), Maps.class);
+                Intent indent = new Intent(getApplicationContext(), MapActivity.class);
                 indent.putExtra("meeting_Id", _Meeting_Id);
                 startActivityForResult(indent, MAPS_REQUEST_CODE);
         }

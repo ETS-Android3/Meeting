@@ -1,4 +1,4 @@
-package com.example.jordan.meeting.activities;
+package com.example.jordan.meeting.tasks;
 
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.jordan.meeting.R;
+import com.example.jordan.meeting.activities.MeetingViewActivity;
 import com.example.jordan.meeting.database.Attendee;
 import com.example.jordan.meeting.database.Meeting;
 import com.google.android.gms.auth.GoogleAuthException;
@@ -43,16 +44,17 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
     private final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     private String tag = "events";
     private Meeting meeting;
+    /* This AsyncTask is bound to be destroyed by the garbage collector after its termination */
     @SuppressLint("StaticFieldLeak")
-    private MeetingView meetingView;
-    boolean retry = false;
+    private MeetingViewActivity meetingView;
+    public boolean retry = false;
 
-    GoogleCalendarTask(final Meeting meeting, final MeetingView meetingView){
+    public GoogleCalendarTask(final Meeting meeting, final MeetingViewActivity meetingView){
         this.meeting = meeting;
         this.meetingView = meetingView;
     }
 
-    void getAccountName(Intent data) {
+    public void getAccountName(Intent data) {
 
         /* Get account name */
         String accountName =
@@ -86,7 +88,7 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
 
         /* Asking user for choosing Google account */
         if (credential.getSelectedAccountName() == null) {
-            meetingView.startActivityForResult(credential.newChooseAccountIntent(), MeetingView.ACCOUNT_REQUEST_CODE);
+            meetingView.startActivityForResult(credential.newChooseAccountIntent(), MeetingViewActivity.ACCOUNT_REQUEST_CODE);
             retry = true;
             return null;
         }
@@ -99,7 +101,7 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
             return null;
         } catch (UserRecoverableAuthException e) {
             Log.d(tag, "Need permission");
-            meetingView.startActivityForResult(e.getIntent(),MeetingView.PERMISSION_REQUEST_CODE);
+            meetingView.startActivityForResult(e.getIntent(),MeetingViewActivity.PERMISSION_REQUEST_CODE);
             retry = true;
             return null;
         } catch (GoogleAuthException e) {
@@ -137,7 +139,11 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
             Attendee attendee = meetingView.attendeeRepo.getAttendeeById(id);
             EventAttendee eventAttendee = new EventAttendee();
             eventAttendee.setDisplayName(attendee.name);
-            eventAttendee.setEmail(attendee.name + "@email.com");
+            /* Email is mandatory for the API request, let's assume for now that it is the attendee
+             * name. The email is used by Google Calendar to sent invitations and deleted
+             * notifications to attendees.
+             **/
+            eventAttendee.setEmail(attendee.name);
             attendees.add(eventAttendee);
             Log.d(tag, "GoogleCalendarTask " + attendee.name + " added to attendees");
         }

@@ -30,11 +30,11 @@ import java.util.List;
  * the list of settings.
  * <p>
  * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
+ * Android Design: SettingsActivity</a> for design guidelines and the <a
+ * href="http://developer.android.com/guide/topics/ui/settings.html">SettingsActivity
+ * API Guide</a> for more information on developing a SettingsActivity UI.
  */
-public class Settings extends AppCompatPreferenceActivity {
+public class SettingsActivity extends AppCompatPreferenceActivity {
 
     String tag = "events";
     private static final int REQUEST_CODE_GOOGLE_ACCOUNT = 10;
@@ -101,7 +101,7 @@ public class Settings extends AppCompatPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(tag, "Settings onCreate");
+        Log.d(tag, "SettingsActivity onCreate");
         super.onCreate(savedInstanceState);
         setupActionBar();
     }
@@ -190,7 +190,7 @@ public class Settings extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), Settings.class));
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -224,7 +224,7 @@ public class Settings extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), Settings.class));
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -264,7 +264,7 @@ public class Settings extends AppCompatPreferenceActivity {
 
     @Override
     public void finish(){
-        Log.d(tag, "Settings finish");
+        Log.d(tag, "SettingsActivity finish");
         Intent data = new Intent();
         setResult(RESULT_OK, data);
         super.finish();

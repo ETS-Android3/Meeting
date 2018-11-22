@@ -14,10 +14,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.jordan.meeting.R;
+import com.example.jordan.meeting.adapters.TabsPagerAdapter;
 
 import java.util.Objects;
 
-public class Main extends AppCompatActivity implements android.view.View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements android.view.View.OnClickListener {
 
     private static final int SETTINGS_REQUEST_CODE = 1;
     private static final int MEETING_EDIT_REQUEST_CODE = 2;
@@ -26,12 +27,12 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
 
     String tag = "events";
 
-    TabsPagerAdapter mAdapter;
+    TabsPagerAdapter tabsPagerAdapter;
     ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(tag, "Main onCreate");
+        Log.d(tag, "MainActivity onCreate");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -50,8 +51,8 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = findViewById(R.id.pager);
-        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(mAdapter);
+        tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(tabsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
@@ -96,7 +97,7 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
 
                 /* Starting settings activity */
                 Log.d(tag, "Action settings");
-                Intent intent = new Intent(this, Settings.class);
+                Intent intent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(intent, SETTINGS_REQUEST_CODE);
                 return true;
 
@@ -107,11 +108,11 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
 
     @Override
     public void onClick(View view) {
-        Log.d(tag, "Main onClick");
+        Log.d(tag, "MainActivity onClick");
         if (view == findViewById(R.id.btnNewMeeting)) {
 
             /* Starting edit meeting activity */
-            Intent intent = new Intent(this, MeetingEdit.class);
+            Intent intent = new Intent(this, MeetingEditActivity.class);
             intent.putExtra("meeting", 0);
             startActivityForResult(intent, MEETING_EDIT_REQUEST_CODE);
 
@@ -122,7 +123,7 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.d(tag, "Main onActivityResult");
+        Log.d(tag, "MainActivity onActivityResult");
         if (resultCode == RESULT_OK) {
 
             /* User feedback */
@@ -132,7 +133,10 @@ public class Main extends AppCompatActivity implements android.view.View.OnClick
                         Toast.LENGTH_SHORT).show();
 
             /* Updating meeting list */
-            viewPager.setAdapter(mAdapter);
+            tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+            viewPager.setAdapter(tabsPagerAdapter);
+        } else {
+            Log.d(tag, "onActivityResult: result code not OK");
         }
     }
 }

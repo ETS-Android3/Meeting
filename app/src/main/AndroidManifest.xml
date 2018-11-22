@@ -5,7 +5,7 @@
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
+         Google MapActivity Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.Main"
+        <activity android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,26 +30,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MeetingEdit"
+        <activity android:name=".activities.MeetingEditActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Main" />
+                android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.MeetingView"
+        <activity android:name=".activities.MeetingViewActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Main" />
+                android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.Settings">
+        <activity android:name=".activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Main" />
+                android:value=".activities.MainActivity" />
         </activity>
         <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
+             The API key for Google MapActivity-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
              Note that the API key is linked to the encryption key used to sign the APK.
              You need a different API key for each encryption key, including the release key that is used to
@@ -61,11 +61,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activities.Maps"
+            android:name=".activities.MapActivity"
             android:label="@string/title_activity_maps">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activities.MeetingView" />
+            android:value=".activities.MeetingViewActivity" />
         </activity>
     </application>
 

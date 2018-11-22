@@ -59,6 +59,7 @@ public class Meeting implements Comparable<Meeting> {
         return thisDate.compareTo(date);
     }
 
+    /* Return true if the meeting is past, false otherwise */
     public boolean isPast(){
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy-HH:mm", Locale.ENGLISH);
         Date date;
