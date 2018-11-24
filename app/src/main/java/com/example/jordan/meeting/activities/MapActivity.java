@@ -70,7 +70,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(tag, "MapActivity onMapReady");
         List<Address> AddressList = null;
 
-        /* Get Address from location String */
+        /* Getting Address from location String */
+        Log.d(tag, "Getting address from location: " + meeting.location);
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
            AddressList = geocoder.getFromLocationName(meeting.location, 1);

@@ -5,13 +5,16 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -33,13 +36,18 @@ import java.util.Objects;
 
 import static com.example.jordan.meeting.R.layout.view_attendee_entry;
 
-public class MeetingViewActivity extends AppCompatActivity implements android.view.View.OnClickListener{
+public class MeetingViewActivity extends AppCompatActivity implements android.view.View.OnClickListener,
+        GestureDetector.OnGestureListener,
+        GestureDetector.OnDoubleTapListener{
 
     private static final int MAPS_REQUEST_CODE = 1;
     private static final int SETTINGS_REQUEST_CODE = 2;
     private static final int MEETING_EDIT_REQUEST_CODE = 3;
     public static final int ACCOUNT_REQUEST_CODE = 4;
     public static final int PERMISSION_REQUEST_CODE = 5;
+
+    private static final int SWIPE_THRESHOLD = 150;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 150;
 
     private String tag = "events";
     private int _Meeting_Id;
@@ -61,6 +69,8 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
     private int fontColor;
 
     GoogleCalendarTask googleCalendarTask;
+
+    private GestureDetectorCompat gestureDetector;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,11 +109,81 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
         textLocation = findViewById(R.id.textLocation);
         textNotes = findViewById(R.id.textNotes);
 
+        /* Making ListView items non clickable */
+        attendeeListView.setEnabled(false);
+        attendeeListView.setOnItemClickListener(null);
+
         /* Click listener */
         textLocation.setOnClickListener(this);
 
         /* Setting fields */
         refresh();
+
+        /* Setting gesture detector */
+        gestureDetector = new GestureDetectorCompat(this,this);
+        gestureDetector.setOnDoubleTapListener(this);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+        super.dispatchTouchEvent(event);
+
+        /* Catching touch events */
+        return this.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        if (this.gestureDetector.onTouchEvent(event)) {
+            return true;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent event1, MotionEvent event2,
+                           float velocityX, float velocityY) {
+        float deltaY = event2.getY() - event1.getY();
+        float deltaX = event2.getX() - event1.getX();
+
+        /* Checking distance and velocity thresholds */
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (Math.abs(deltaX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (deltaX > 0) {
+
+                    /* Finishing if swiping left */
+                    finish();
+                } else {
+                    Log.d(tag, "Swiping right");
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -296,5 +376,20 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
                 indent.putExtra("meeting_Id", _Meeting_Id);
                 startActivityForResult(indent, MAPS_REQUEST_CODE);
         }
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
     }
 }
