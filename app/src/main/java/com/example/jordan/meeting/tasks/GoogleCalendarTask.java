@@ -44,7 +44,10 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
     private final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     private String tag = "events";
     private Meeting meeting;
-    /* This AsyncTask is bound to be destroyed by the garbage collector after its termination */
+
+    /* This AsyncTask object is bound to be destroyed by the garbage collector after the next Google
+     * Calendar event adding request.
+     * */
     @SuppressLint("StaticFieldLeak")
     private MeetingViewActivity meetingView;
     public boolean retry = false;
@@ -70,32 +73,33 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        String token;
 
         /* Getting Google account credential */
-        credential =
-                GoogleAccountCredential.usingOAuth2(meetingView, Collections.singleton(CalendarScopes.CALENDAR));
+        credential = GoogleAccountCredential.usingOAuth2(meetingView,
+                Collections.singleton(CalendarScopes.CALENDAR));
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(meetingView);
         Log.d(tag, "Google account name: " + sharedPref.getString(meetingView.getString(R.string.pref_key_google_account_name),
                 null));
         credential.setSelectedAccountName(sharedPref.getString(meetingView.getString(R.string.pref_key_google_account_name),
                 null));
 
-        /* Getting Google calendar client */
-        com.google.api.services.calendar.Calendar client = new com.google.api.services.calendar.Calendar.Builder(
-                transport, jsonFactory, credential).setApplicationName(meetingView.getString(R.string.app_name))
-                .build();
+        /* Getting Google Calendar client */
+        com.google.api.services.calendar.Calendar client =
+                new com.google.api.services.calendar.Calendar.Builder(transport, jsonFactory,
+                        credential).setApplicationName(meetingView.getString(R.string.app_name)).build();
 
         /* Asking user for choosing Google account */
         if (credential.getSelectedAccountName() == null) {
-            meetingView.startActivityForResult(credential.newChooseAccountIntent(), MeetingViewActivity.ACCOUNT_REQUEST_CODE);
+            meetingView.startActivityForResult(credential.newChooseAccountIntent(),
+                    MeetingViewActivity.ACCOUNT_REQUEST_CODE);
             retry = true;
             return null;
         }
 
         /* Asking user for permission if needed */
         try {
-            token = GoogleAuthUtil.getToken(meetingView.getApplicationContext(), credential.getSelectedAccount(), credential.getScope());
+            Log.d(tag, "Token: " + GoogleAuthUtil.getToken(meetingView.getApplicationContext(),
+                    credential.getSelectedAccount(), credential.getScope()));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -118,7 +122,8 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy-HH:mm", Locale.ENGLISH);
         DateTime startDateTime;
         try {
-            startDateTime = new DateTime(dateFormatter.parse(meeting.date + "-" + meeting.time).getTime());
+            startDateTime = new DateTime(dateFormatter.parse(meeting.date
+                    + "-" + meeting.time).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -139,11 +144,9 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
             Attendee attendee = meetingView.attendeeRepo.getAttendeeById(id);
             EventAttendee eventAttendee = new EventAttendee();
             eventAttendee.setDisplayName(attendee.name);
-            /* Email is mandatory for the API request, let's assume for now that it is the attendee
-             * name. The email is used by Google Calendar to sent invitations and deleted
-             * notifications to attendees.
-             **/
-            eventAttendee.setEmail(attendee.name);
+
+            /* Email is mandatory for the API request */
+            eventAttendee.setEmail(meetingView.getString(R.string.google_calendar_email_example));
             attendees.add(eventAttendee);
             Log.d(tag, "GoogleCalendarTask " + attendee.name + " added to attendees");
         }
@@ -163,17 +166,19 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d(tag, "Event created: " + event.getHtmlLink());
+        Log.d(tag, "Event created link: " + event.getHtmlLink());
 
-        return  token;
+        return event.getHtmlLink();
     }
 
     @Override
-    protected void onPostExecute(String token) {
-        Log.d(tag, "Access token retrieved: " + token);
-        if (token == null && !retry)
+    protected void onPostExecute(String event) {
+        Log.d(tag, "GoogleCalendarTask onPostExecute");
+
+        if (event == null && !retry)
             Toast.makeText(meetingView, R.string.toast_google_calendar_sync_fail, Toast.LENGTH_SHORT).show();
-        else if(token != null)
-            Toast.makeText(meetingView, R.string.toast_google_calendar_sync_success, Toast.LENGTH_SHORT).show();
+        else if(event != null)
+            Toast.makeText(meetingView, R.string.toast_google_calendar_sync_success,
+                    Toast.LENGTH_SHORT).show();
     }
 }

@@ -51,6 +51,7 @@
     <string name="menu_delete_title">Delete</string>
     <string name="menu_edit_title">Edit</string>
     <string name="menu_google_calendar_title">Add to Google Calendar</string>
+    <string name="menu_done_title">Done</string>
 
     <!-- Preferences -->
     <string name="pref_google_calendar">Google Calendar</string>
@@ -58,7 +59,7 @@
     <string name="pref_key_google_account_name">GoogleAccountName</string>
 
     <string name="meeting_name_field">Meeting name</string>
-    <string name="menu_done_title">Done</string>
     <string name="tab_title_current_meeting">Current</string>
     <string name="tab_title_past_meeting">Past</string>
+    <string name="google_calendar_email_example">\example@email.com</string>
 </resources>

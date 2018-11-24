@@ -70,13 +70,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(tag, "MapActivity onMapReady");
         List<Address> AddressList = null;
 
-        /* Getting Address from location String */
+        /* Getting one address result from meeting location */
         Log.d(tag, "Getting address from location: " + meeting.location);
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-           AddressList = geocoder.getFromLocationName(meeting.location, 1);
+            AddressList = geocoder.getFromLocationName(meeting.location, 1);
         } catch (IOException e) {
-            Log.d(tag, "Geocode: " + e);
+            Log.d(tag, "Geocoder: " + e);
         }
         if ((AddressList != null) && (!AddressList.isEmpty())) {
             Log.d(tag, "Address found: " + AddressList.get(0).toString());
