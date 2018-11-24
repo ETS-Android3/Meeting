@@ -461,14 +461,19 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
     @Override
     public void finish(){
         Log.d(tag, "MeetingEditActivity finish");
+
         Intent data = new Intent();
-        if (!returnKey.isEmpty())
+
+        if (!returnKey.isEmpty()) {
             data.putExtra("returnKey", returnKey);
+        }
+
         setResult(RESULT_OK, data);
 
-        /* Delete temporary meeting data */
+        /* Deleting temporary meeting data */
         if (_Meeting_Id == 0)
             deleteMeeting(_Meeting_Id);
+
         super.finish();
     }
 }

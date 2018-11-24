@@ -15,13 +15,14 @@ import android.widget.Toast;
 
 import com.example.jordan.meeting.R;
 import com.example.jordan.meeting.adapters.TabsPagerAdapter;
+import com.example.jordan.meeting.fragments.MeetingFragment;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements android.view.View.OnClickListener {
 
     private static final int SETTINGS_REQUEST_CODE = 1;
-    private static final int MEETING_EDIT_REQUEST_CODE = 2;
+    private static final int MEETING_NEW_REQUEST_CODE = 2;
 
     FloatingActionButton btnNewMeeting;
 
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements android.view.View
             /* Starting edit meeting activity */
             Intent intent = new Intent(this, MeetingEditActivity.class);
             intent.putExtra("meeting", 0);
-            startActivityForResult(intent, MEETING_EDIT_REQUEST_CODE);
+            startActivityForResult(intent, MEETING_NEW_REQUEST_CODE);
 
             /* Setting activity transition */
             overridePendingTransition(R.anim.translate_in_from_right, R.anim.translate_out_to_left);
@@ -126,19 +127,37 @@ public class MainActivity extends AppCompatActivity implements android.view.View
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         Log.d(tag, "MainActivity onActivityResult");
-        if (resultCode == RESULT_OK) {
 
-            /* User feedback */
-            if (data.hasExtra("returnKey"))
-                Toast.makeText(this,
-                        Objects.requireNonNull(data.getExtras()).getString("returnKey"),
-                        Toast.LENGTH_SHORT).show();
-
-            /* Updating meeting lists */
-            tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
-            viewPager.setAdapter(tabsPagerAdapter);
-        } else {
+        if (resultCode != RESULT_OK){
             Log.d(tag, "onActivityResult: result code not OK");
+            return;
+        }
+        Log.d(tag, "Request code = " + requestCode);
+
+        switch(requestCode){
+
+            case SETTINGS_REQUEST_CODE:
+                Log.d(tag, "SETTINGS_REQUEST_CODE");
+
+            case MeetingFragment.MEETING_VIEW_REQUEST_CODE:
+                Log.d(tag, "MEETING_VIEW_REQUEST_CODE");
+
+            case MEETING_NEW_REQUEST_CODE:
+                Log.d(tag, "MEETING_NEW_REQUEST_CODE");
+
+                /* User feedback */
+                if (data.hasExtra("returnKey"))
+                    Toast.makeText(this,
+                            Objects.requireNonNull(data.getExtras()).getString("returnKey"),
+                            Toast.LENGTH_SHORT).show();
+
+                /* Updating meeting lists */
+                tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+                viewPager.setAdapter(tabsPagerAdapter);
+                break;
+
+            default:
+                Log.d(tag, "Request code unknown: " + requestCode);
         }
     }
 }

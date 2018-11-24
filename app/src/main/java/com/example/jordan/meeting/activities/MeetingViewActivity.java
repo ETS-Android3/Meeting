@@ -40,11 +40,11 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
         GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener{
 
-    private static final int MAPS_REQUEST_CODE = 1;
-    private static final int SETTINGS_REQUEST_CODE = 2;
-    private static final int MEETING_EDIT_REQUEST_CODE = 3;
-    public static final int ACCOUNT_REQUEST_CODE = 4;
-    public static final int PERMISSION_REQUEST_CODE = 5;
+    private static final int MAPS_REQUEST_CODE = 3;
+    private static final int SETTINGS_REQUEST_CODE = 4;
+    private static final int MEETING_EDIT_REQUEST_CODE = 5;
+    public static final int ACCOUNT_REQUEST_CODE = 6;
+    public static final int PERMISSION_REQUEST_CODE = 7;
 
     private static final int SWIPE_THRESHOLD = 150;
     private static final int SWIPE_VELOCITY_THRESHOLD = 150;
@@ -236,11 +236,15 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
 
                         /* Finishing if the meeting has been deleted */
                         if (Objects.requireNonNull(returnKey).equals(getString(R.string.return_key_delete))) {
+
+                            /* User feedback */
+                            Toast.makeText(this, returnKey, Toast.LENGTH_SHORT).show();
                             finish();
                         }
-
-                        Toast.makeText(this, returnKey, Toast.LENGTH_SHORT).show();
                     }
+
+                    /* Refreshing meeting view */
+                    refresh();
                     break;
 
                 case MAPS_REQUEST_CODE:
@@ -274,9 +278,6 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
             }
 
         }
-
-        /* Refreshing meeting view */
-        refresh();
     }
 
     private void refresh() {
@@ -356,14 +357,6 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
     }
 
     @Override
-    public void finish(){
-        Log.d(tag, "MeetingViewActivity finish");
-        Intent data = new Intent();
-        setResult(RESULT_OK, data);
-        super.finish();
-    }
-
-    @Override
     public void onClick(View v) {
         Log.d(tag, "MeetingViewActivity onClick");
         switch (v.getId()) {
@@ -391,5 +384,12 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
+    }
+
+    @Override
+    public void finish(){
+        Log.d(tag, "MeetingViewActivity finish");
+        setResult(RESULT_OK, new Intent());
+        super.finish();
     }
 }

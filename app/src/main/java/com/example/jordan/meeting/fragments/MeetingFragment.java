@@ -32,7 +32,7 @@ import static com.example.jordan.meeting.R.layout.meeting_entry;
 
 public class MeetingFragment extends Fragment {
 
-    private static final int MEETING_VIEW_REQUEST_CODE = 1;
+    public static final int MEETING_VIEW_REQUEST_CODE = 3;
 
     TextView meeting_Id;
 
@@ -40,7 +40,7 @@ public class MeetingFragment extends Fragment {
 
     ListView meetingListView;
 
-    String tag = "events";
+    String tag = "MeetingFragment";
 
     SharedPreferences sharedPref;
 
@@ -72,7 +72,8 @@ public class MeetingFragment extends Fragment {
                 Intent indent = new Intent(Objects.requireNonNull(getContext()).getApplicationContext(),
                         MeetingViewActivity.class);
                 indent.putExtra("meeting_Id", Integer.parseInt(meetingId));
-                startActivityForResult(indent, MEETING_VIEW_REQUEST_CODE);
+                Objects.requireNonNull(getActivity()).startActivityForResult(indent,
+                        MEETING_VIEW_REQUEST_CODE);
 
                 /* Setting activity transition */
                 Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.translate_in_from_right,
@@ -87,7 +88,7 @@ public class MeetingFragment extends Fragment {
         updateMeetingListView();
     }
 
-    public void updateMeetingListView() {
+    private void updateMeetingListView() {
 
         /* Getting preferences */
         String prefFontSize = sharedPref.getString("fontSize", "-1");
