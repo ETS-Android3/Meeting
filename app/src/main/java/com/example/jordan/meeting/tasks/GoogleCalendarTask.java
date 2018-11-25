@@ -6,13 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.jordan.meeting.R;
-import com.example.jordan.meeting.activities.MeetingViewActivity;
 import com.example.jordan.meeting.database.Attendee;
 import com.example.jordan.meeting.database.Meeting;
+import com.example.jordan.meeting.repositories.AttendToRepo;
+import com.example.jordan.meeting.repositories.AttendeeRepo;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -39,6 +41,10 @@ import java.util.Objects;
 
 public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
 
+    /* request codes related to the google calendar feature */
+    public static final int ACCOUNT_REQUEST_CODE = 6;
+    public static final int PERMISSION_REQUEST_CODE = 7;
+
     private GoogleAccountCredential credential;
     private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     private final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -49,12 +55,19 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
      * Calendar event adding request.
      * */
     @SuppressLint("StaticFieldLeak")
-    private MeetingViewActivity meetingView;
+    private AppCompatActivity activity;
     public boolean retry = false;
+    private AttendToRepo attendToRepo;
+    private AttendeeRepo attendeeRepo;
+    private boolean feedback;
 
-    public GoogleCalendarTask(final Meeting meeting, final MeetingViewActivity meetingView){
+    public GoogleCalendarTask(final Meeting meeting, final AppCompatActivity activity,
+                              AttendToRepo attendToRepo, AttendeeRepo attendeeRepo, boolean feedback){
         this.meeting = meeting;
-        this.meetingView = meetingView;
+        this.activity = activity;
+        this.attendToRepo = attendToRepo;
+        this.attendeeRepo = attendeeRepo;
+        this.feedback = feedback;
     }
 
     public void getAccountName(Intent data) {
@@ -64,9 +77,9 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
                 Objects.requireNonNull(data.getExtras()).getString(AccountManager.KEY_ACCOUNT_NAME);
         if (accountName != null) {
             credential.setSelectedAccountName(accountName);
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(meetingView);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(meetingView.getString(R.string.pref_key_google_account_name), accountName);
+            editor.putString(activity.getString(R.string.pref_key_google_account_name), accountName);
             editor.apply();
         }
     }
@@ -75,37 +88,37 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
 
         /* Getting Google account credential */
-        credential = GoogleAccountCredential.usingOAuth2(meetingView,
+        credential = GoogleAccountCredential.usingOAuth2(activity,
                 Collections.singleton(CalendarScopes.CALENDAR));
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(meetingView);
-        Log.d(tag, "Google account name: " + sharedPref.getString(meetingView.getString(R.string.pref_key_google_account_name),
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        Log.d(tag, "Google account name: " + sharedPref.getString(activity.getString(R.string.pref_key_google_account_name),
                 null));
-        credential.setSelectedAccountName(sharedPref.getString(meetingView.getString(R.string.pref_key_google_account_name),
+        credential.setSelectedAccountName(sharedPref.getString(activity.getString(R.string.pref_key_google_account_name),
                 null));
 
         /* Getting Google Calendar client */
         com.google.api.services.calendar.Calendar client =
                 new com.google.api.services.calendar.Calendar.Builder(transport, jsonFactory,
-                        credential).setApplicationName(meetingView.getString(R.string.app_name)).build();
+                        credential).setApplicationName(activity.getString(R.string.app_name)).build();
 
         /* Asking user for choosing Google account */
         if (credential.getSelectedAccountName() == null) {
-            meetingView.startActivityForResult(credential.newChooseAccountIntent(),
-                    MeetingViewActivity.ACCOUNT_REQUEST_CODE);
+            activity.startActivityForResult(credential.newChooseAccountIntent(),
+                    ACCOUNT_REQUEST_CODE);
             retry = true;
             return null;
         }
 
         /* Asking user for permission if needed */
         try {
-            Log.d(tag, "Token: " + GoogleAuthUtil.getToken(meetingView.getApplicationContext(),
+            Log.d(tag, "Token: " + GoogleAuthUtil.getToken(activity.getApplicationContext(),
                     credential.getSelectedAccount(), credential.getScope()));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         } catch (UserRecoverableAuthException e) {
             Log.d(tag, "Need permission");
-            meetingView.startActivityForResult(e.getIntent(),MeetingViewActivity.PERMISSION_REQUEST_CODE);
+            activity.startActivityForResult(e.getIntent(),PERMISSION_REQUEST_CODE);
             retry = true;
             return null;
         } catch (GoogleAuthException e) {
@@ -138,15 +151,15 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
         event.setEnd(end);
 
         /* Setting attendees list */
-        ArrayList<Integer> ids = meetingView.attendToRepo.getAttendeeIDs(meeting.meeting_ID);
+        ArrayList<Integer> ids = attendToRepo.getAttendeeIDs(meeting.meeting_ID);
         ArrayList<EventAttendee> attendees = new ArrayList<>();
         for (int id : ids){
-            Attendee attendee = meetingView.attendeeRepo.getAttendeeById(id);
+            Attendee attendee = attendeeRepo.getAttendeeById(id);
             EventAttendee eventAttendee = new EventAttendee();
             eventAttendee.setDisplayName(attendee.name);
 
             /* Email is mandatory for the API request */
-            eventAttendee.setEmail(meetingView.getString(R.string.google_calendar_email_example));
+            eventAttendee.setEmail(activity.getString(R.string.google_calendar_email_example));
             attendees.add(eventAttendee);
             Log.d(tag, "GoogleCalendarTask " + attendee.name + " added to attendees");
         }
@@ -175,10 +188,13 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String event) {
         Log.d(tag, "GoogleCalendarTask onPostExecute");
 
+        if(!feedback)
+            return;
+
         if (event == null && !retry)
-            Toast.makeText(meetingView, R.string.toast_google_calendar_sync_fail, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.toast_google_calendar_sync_fail, Toast.LENGTH_SHORT).show();
         else if(event != null)
-            Toast.makeText(meetingView, R.string.toast_google_calendar_sync_success,
+            Toast.makeText(activity, R.string.toast_google_calendar_sync_success,
                     Toast.LENGTH_SHORT).show();
     }
 }

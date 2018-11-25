@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,6 +34,7 @@ import com.example.jordan.meeting.database.Meeting;
 import com.example.jordan.meeting.repositories.AttendToRepo;
 import com.example.jordan.meeting.repositories.AttendeeRepo;
 import com.example.jordan.meeting.repositories.MeetingRepo;
+import com.example.jordan.meeting.tasks.GoogleCalendarTask;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,6 +61,8 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
 
     Spinner spnAttendees;
 
+    CheckBox checkBoxGoogleCalendar;
+
     AttendeeRepo attendeeRepo;
     AttendToRepo attendToRepo;
     MeetingRepo meetingRepo;
@@ -69,6 +73,8 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
     String returnKey = "";
     String newAttendee = "";
     String tag = "events";
+
+    GoogleCalendarTask googleCalendarTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,7 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
         editTextNotes = findViewById(R.id.editTextNotes);
         attendeeListView = findViewById(R.id.attendeeList);
         spnAttendees = findViewById(R.id.spnAttendee);
+        checkBoxGoogleCalendar = findViewById(R.id.checkboxGoogleCalendar);
 
         btnNewAttendee.setOnClickListener(this);
         textDate.setOnClickListener(this);
@@ -242,6 +249,14 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
                     meetingRepo.update(meeting);
                     returnKey = getString(R.string.return_key_update);
                 }
+
+                /* Adding event to Google Calendar */
+                if (checkBoxGoogleCalendar.isChecked()){
+                    googleCalendarTask = new GoogleCalendarTask(meeting,
+                            this, attendToRepo, attendeeRepo, false);
+                    googleCalendarTask.execute();
+                }
+
                 finish();
                 return true;
 
@@ -456,6 +471,40 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
         /* User feedback */
         Toast.makeText(parent.getContext(), attendeeName + getString(R.string.feedback_attendee_removed),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        Log.d(tag, "MeetingEditActivity onActivityResult");
+        if (resultCode == RESULT_OK){
+            switch (requestCode){
+
+                case GoogleCalendarTask.ACCOUNT_REQUEST_CODE:
+                    Log.d(tag, "User requested for account");
+
+                    /* Getting Google account name */
+                    googleCalendarTask.getAccountName(data);
+
+                    /* User has been asked for account, let's try again */
+                    if (googleCalendarTask.retry) {
+                        googleCalendarTask = new GoogleCalendarTask(meeting, this,
+                                attendToRepo, attendeeRepo, false);
+                        googleCalendarTask.execute();
+                    }
+                    break;
+
+                case GoogleCalendarTask.PERMISSION_REQUEST_CODE:
+                    Log.d(tag, "User requested for permission");
+
+                    /* User has been asked for permission, let's try again */
+                    if (googleCalendarTask.retry) {
+                        googleCalendarTask = new GoogleCalendarTask(meeting, this,
+                                attendToRepo, attendeeRepo, false);
+                        googleCalendarTask.execute();
+                    }
+                    break;
+            }
+        }
     }
 
     @Override

@@ -43,8 +43,6 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
     private static final int MAPS_REQUEST_CODE = 3;
     private static final int SETTINGS_REQUEST_CODE = 4;
     public static final int MEETING_EDIT_REQUEST_CODE = 5;
-    public static final int ACCOUNT_REQUEST_CODE = 6;
-    public static final int PERMISSION_REQUEST_CODE = 7;
 
     private static final int SWIPE_THRESHOLD = 150;
     private static final int SWIPE_VELOCITY_THRESHOLD = 150;
@@ -213,7 +211,8 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
                 Log.d(tag, "Action sync calendar");
 
                 /* Initializing connection to Google API */
-                googleCalendarTask = new GoogleCalendarTask(meeting, this);
+                googleCalendarTask = new GoogleCalendarTask(meeting, this,
+                        attendToRepo, attendeeRepo, true);
 
                 /* Adding event to Google calendar */
                 googleCalendarTask.execute();
@@ -253,7 +252,7 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
                     textLocation.setTextColor(0);
                     break;
 
-                case ACCOUNT_REQUEST_CODE:
+                case GoogleCalendarTask.ACCOUNT_REQUEST_CODE:
                     Log.d(tag, "User requested for account");
 
                     /* Getting Google account name */
@@ -261,17 +260,19 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
 
                     /* User has been asked for account, let's try again */
                     if (googleCalendarTask.retry) {
-                        googleCalendarTask = new GoogleCalendarTask(meeting, this);
+                        googleCalendarTask = new GoogleCalendarTask(meeting, this,
+                                attendToRepo, attendeeRepo, true);
                         googleCalendarTask.execute();
                     }
                     break;
 
-                case PERMISSION_REQUEST_CODE:
+                case GoogleCalendarTask.PERMISSION_REQUEST_CODE:
                     Log.d(tag, "User requested for permission");
 
                     /* User has been asked for permission, let's try again */
                     if (googleCalendarTask.retry) {
-                        googleCalendarTask = new GoogleCalendarTask(meeting, this);
+                        googleCalendarTask = new GoogleCalendarTask(meeting, this,
+                                attendToRepo, attendeeRepo, true);
                         googleCalendarTask.execute();
                     }
                     break;
