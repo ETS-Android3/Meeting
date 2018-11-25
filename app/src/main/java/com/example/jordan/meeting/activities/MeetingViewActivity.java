@@ -42,7 +42,7 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
 
     private static final int MAPS_REQUEST_CODE = 3;
     private static final int SETTINGS_REQUEST_CODE = 4;
-    private static final int MEETING_EDIT_REQUEST_CODE = 5;
+    public static final int MEETING_EDIT_REQUEST_CODE = 5;
     public static final int ACCOUNT_REQUEST_CODE = 6;
     public static final int PERMISSION_REQUEST_CODE = 7;
 
@@ -275,8 +275,14 @@ public class MeetingViewActivity extends AppCompatActivity implements android.vi
                         googleCalendarTask.execute();
                     }
                     break;
-            }
 
+                case SETTINGS_REQUEST_CODE:
+                    Log.d(tag, "Outing settings");
+
+                    /* Refreshing */
+                    refresh();
+                    break;
+            }
         }
     }
 
