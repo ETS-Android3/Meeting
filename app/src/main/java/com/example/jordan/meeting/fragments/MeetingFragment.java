@@ -40,7 +40,7 @@ public class MeetingFragment extends Fragment {
 
     ListView meetingListView;
 
-    String tag = "MeetingFragment";
+    String tag = "events";
 
     SharedPreferences sharedPref;
 

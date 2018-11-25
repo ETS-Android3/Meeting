@@ -86,6 +86,18 @@ public class MainActivity extends AppCompatActivity implements android.view.View
     }
 
     @Override
+    public void onStart(){
+        Log.d(tag, "MainActivity onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onRestart(){
+        Log.d(tag, "MainActivity onRestart");
+        super.onRestart();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         /* Inflating menu */
