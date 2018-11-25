@@ -188,8 +188,12 @@ public class GoogleCalendarTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String event) {
         Log.d(tag, "GoogleCalendarTask onPostExecute");
 
-        if(!feedback)
+        if(!feedback && !retry){
+
+            /* Finishing editing activity */
+            activity.finish();
             return;
+        }
 
         if (event == null && !retry)
             Toast.makeText(activity, R.string.toast_google_calendar_sync_fail, Toast.LENGTH_SHORT).show();

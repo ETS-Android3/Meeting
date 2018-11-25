@@ -255,9 +255,10 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
                     googleCalendarTask = new GoogleCalendarTask(meeting,
                             this, attendToRepo, attendeeRepo, false);
                     googleCalendarTask.execute();
+                } else {
+                    finish();
                 }
 
-                finish();
                 return true;
 
             case R.id.action_delete:
