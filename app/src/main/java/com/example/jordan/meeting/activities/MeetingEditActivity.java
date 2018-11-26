@@ -231,6 +231,7 @@ public class MeetingEditActivity extends AppCompatActivity implements android.vi
 
                     /* Create new meeting */
                     _Meeting_Id = meetingRepo.insert(meeting);
+                    meeting.meeting_ID = _Meeting_Id;
 
                     /* Moving attendees from temporary meeting to the new meeting */
                     ArrayList<Integer> attendeeIds = attendToRepo.getAttendeeIDs(0);
